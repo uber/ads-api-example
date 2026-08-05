@@ -1,0 +1,6169 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Uber Ads API",
+    "version": "1.0.0",
+    "description": "Complete reference for the Uber Ads external API. This document aggregates every endpoint (ad accounts, campaigns, ad groups, ads, product catalog, and reporting) into a single OpenAPI specification."
+  },
+  "servers": [
+    {
+      "url": "https://api.uber.com"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Ad Account"
+    },
+    {
+      "name": "Campaigns"
+    },
+    {
+      "name": "Ad Groups"
+    },
+    {
+      "name": "Ads"
+    },
+    {
+      "name": "Product Catalog"
+    },
+    {
+      "name": "Reporting"
+    }
+  ],
+  "paths": {
+    "/v1/ads/ad-accounts": {
+      "get": {
+        "summary": "Get Ad Accounts",
+        "description": "Retrieve a list of ad accounts for the authenticated user. Only active ad accounts are returned.",
+        "security": [
+          {
+            "auth": [
+              "ads.ad-accounts.read"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ad_accounts": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GetAdAccounts_AdAccount"
+                      },
+                      "description": "List of ad account objects"
+                    }
+                  }
+                },
+                "example": {
+                  "ad_accounts": [
+                    {
+                      "ad_account_id": "acc_12345",
+                      "name": "Main Advertising Account",
+                      "country_code": "US",
+                      "currency_code": "USD",
+                      "account_type": "OFD",
+                      "billing": {
+                        "address": {
+                          "address_line1": "123 Main Street",
+                          "address_line2": "Suite 100",
+                          "city": "San Francisco",
+                          "state": "CA",
+                          "country_code": "US",
+                          "postal_code": "94102"
+                        },
+                        "type": "ACCOUNT_BILLING_MODE_AUTO"
+                      }
+                    },
+                    {
+                      "ad_account_id": "acc_67890",
+                      "name": "Secondary Account",
+                      "country_code": "CA",
+                      "currency_code": "CAD",
+                      "account_type": "USER_STORES_GROUP",
+                      "billing": {
+                        "address": {
+                          "address_line1": "456 Maple Avenue",
+                          "city": "Toronto",
+                          "state": "ON",
+                          "country_code": "CA",
+                          "postal_code": "M5V 3A8"
+                        },
+                        "type": "ACCOUNT_BILLING_MODE_MANUAL"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdAccounts_error"
+                },
+                "example": {
+                  "code": "BadRequest",
+                  "message": "Invalid request format or parameters."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdAccounts_error"
+                },
+                "example": {
+                  "code": "Unauthorized",
+                  "message": "Authentication credentials are missing or invalid."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdAccounts_error"
+                },
+                "example": {
+                  "code": "PermissionDenied",
+                  "message": "Insufficient permissions to perform this operation."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdAccounts_error"
+                },
+                "example": {
+                  "code": "NotFound",
+                  "message": "The requested resource was not found or is inaccessible"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate Limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdAccounts_error"
+                },
+                "example": {
+                  "code": "RateLimitExceeded",
+                  "message": "Request limit exceeded."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdAccounts_error"
+                },
+                "example": {
+                  "code": "Internal",
+                  "message": "An unexpected server error occurred."
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-ad-accounts",
+        "tags": [
+          "Ad Account"
+        ]
+      }
+    },
+    "/v1/ads/{ad_account_id}/stores": {
+      "get": {
+        "summary": "Get Stores",
+        "description": "Retrieve a list of stores for an ad account.",
+        "security": [
+          {
+            "auth": [
+              "ads.ad-accounts.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ad_account_id",
+            "required": true,
+            "description": "Ad account identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_token",
+            "required": false,
+            "description": "Page token for pagination",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_limit",
+            "required": false,
+            "description": "Number of results to return (Max 2000)",
+            "schema": {
+              "type": "integer",
+              "maximum": 2000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "stores": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GetStores_Store"
+                      },
+                      "description": "List of store objects"
+                    },
+                    "next_page_token": {
+                      "$ref": "#/components/schemas/GetStores_PageToken"
+                    }
+                  }
+                },
+                "example": {
+                  "stores": [
+                    {
+                      "id": "store-123",
+                      "name": "Downtown Restaurant",
+                      "currency_code": "USD",
+                      "image_url": "https://images.uber.com/store/downtown-restaurant.jpg",
+                      "address": {
+                        "address_line1": "123 Main Street",
+                        "address_line2": "Suite 100",
+                        "city": "San Francisco",
+                        "region": "CA",
+                        "postal_code": "94102",
+                        "country": "US",
+                        "latitude": 37.7749,
+                        "longitude": -122.4194
+                      }
+                    },
+                    {
+                      "id": "store-456",
+                      "name": "Uptown Cafe",
+                      "currency_code": "USD",
+                      "image_url": "https://images.uber.com/store/uptown-cafe.jpg",
+                      "address": {
+                        "address_line1": "456 Market Street",
+                        "city": "San Francisco",
+                        "region": "CA",
+                        "postal_code": "94103",
+                        "country": "US",
+                        "latitude": 37.7849,
+                        "longitude": -122.4294
+                      }
+                    }
+                  ],
+                  "next_page_token": {
+                    "value": "eyJsYXN0X3N0b3JlX2lkIjoic3RvcmUtNDU2In0"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStores_error"
+                },
+                "example": {
+                  "code": "BadRequest",
+                  "message": "Invalid request format or parameters."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStores_error"
+                },
+                "example": {
+                  "code": "Unauthorized",
+                  "message": "Authentication credentials are missing or invalid."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStores_error"
+                },
+                "example": {
+                  "code": "PermissionDenied",
+                  "message": "Insufficient permissions to perform this operation."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStores_error"
+                },
+                "example": {
+                  "code": "NotFound",
+                  "message": "The requested resource was not found or is inaccessible"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate Limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStores_error"
+                },
+                "example": {
+                  "code": "RateLimitExceeded",
+                  "message": "Request limit exceeded."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStores_error"
+                },
+                "example": {
+                  "code": "Internal",
+                  "message": "An unexpected server error occurred."
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-stores",
+        "tags": [
+          "Ad Account"
+        ]
+      }
+    },
+    "/v1/ads/{account_id}/campaigns": {
+      "get": {
+        "summary": "Get Campaigns",
+        "description": "Retrieve a list of campaigns for an account.",
+        "security": [
+          {
+            "auth": [
+              "ads.campaigns.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "description": "Account identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_token",
+            "required": false,
+            "description": "Page token for pagination",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_limit",
+            "required": false,
+            "description": "Number of results to return (Max 2000)",
+            "schema": {
+              "type": "integer",
+              "maximum": 2000
+            }
+          },
+          {
+            "in": "query",
+            "name": "campaign_id",
+            "required": false,
+            "description": "Filter by specific campaign ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "campaigns": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GetCampaigns_Campaign"
+                      },
+                      "description": "List of campaign objects"
+                    },
+                    "next_page_token": {
+                      "$ref": "#/components/schemas/GetCampaigns_PageToken"
+                    }
+                  }
+                },
+                "example": {
+                  "campaigns": [
+                    {
+                      "campaign_id": "00117dad-f83f-4a38-9192-a371250ff09e",
+                      "name": "Q4 Holiday Sponsored Listings Campaign",
+                      "created_at": "2023-12-01T20:27:24Z",
+                      "updated_at": "2023-12-01T22:09:13Z",
+                      "created_by_email": "advertiser@restaurant.com",
+                      "updated_by_email": "manager@restaurant.com",
+                      "budget": {
+                        "unit": "BUDGET_UNIT_DAILY",
+                        "total": {
+                          "amount_e5": "50000",
+                          "currency_code": "USD"
+                        },
+                        "cofunding_sources": [
+                          {
+                            "funding_percentage": 70
+                          }
+                        ]
+                      },
+                      "ad_groups": [
+                        {
+                          "ad_group_id": "379638e6-5ecf-5b27-af83-68368ee3f597",
+                          "name": "Downtown Store Promotion - Ad Group 1",
+                          "ad_product": "SPONSORED_LISTING",
+                          "configured_status": "AD_GROUP_CONFIGURED_STATUS_ACTIVE",
+                          "effective_status": "AD_GROUP_EFFECTIVE_STATUS_ACTIVE",
+                          "permissions": [
+                            "READ",
+                            "UPDATE",
+                            "DELETE"
+                          ]
+                        }
+                      ],
+                      "configured_status": "CAMPAIGN_CONFIGURED_STATUS_ACTIVE",
+                      "effective_status": "CAMPAIGN_EFFECTIVE_STATUS_ACTIVE",
+                      "permissions": [
+                        "READ",
+                        "UPDATE",
+                        "DELETE"
+                      ]
+                    },
+                    {
+                      "campaign_id": "02416290-cf7b-4f17-ab46-f77cb13f5051",
+                      "name": "Winter Menu Launch Campaign",
+                      "created_at": "2023-12-18T23:47:34Z",
+                      "updated_at": "2023-12-18T23:47:34Z",
+                      "created_by_email": "marketing@brand.com",
+                      "updated_by_email": "manager@brand.com",
+                      "budget": {
+                        "unit": "BUDGET_UNIT_WEEKLY",
+                        "total": {
+                          "amount_e5": "25000",
+                          "currency_code": "USD"
+                        },
+                        "cofunding_sources": [
+                          {
+                            "funding_percentage": 70
+                          }
+                        ]
+                      },
+                      "ad_groups": [
+                        {
+                          "ad_group_id": "41dd6ced-2465-5e8d-a686-bad20c1de101",
+                          "name": "Chicago Area Stores - Ad Group 1",
+                          "ad_product": "SPONSORED_SEARCH",
+                          "configured_status": "AD_GROUP_CONFIGURED_STATUS_ACTIVE",
+                          "effective_status": "AD_GROUP_EFFECTIVE_STATUS_ACTIVE",
+                          "permissions": [
+                            "READ",
+                            "UPDATE"
+                          ]
+                        }
+                      ],
+                      "configured_status": "CAMPAIGN_CONFIGURED_STATUS_ACTIVE",
+                      "effective_status": "CAMPAIGN_EFFECTIVE_STATUS_ACTIVE",
+                      "permissions": [
+                        "READ",
+                        "UPDATE"
+                      ]
+                    }
+                  ],
+                  "next_page_token": {
+                    "value": "eyJsYXN0X2NhbXBhaWduX2lkIjoiMDI0MTYyOTAtY2Y3Yi00ZjE3LWFiNDYtZjc3Y2IxM2Y1MDUxIn0"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCampaigns_error"
+                },
+                "example": {
+                  "code": "BadRequest",
+                  "message": "Invalid request format or parameters."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCampaigns_error"
+                },
+                "example": {
+                  "code": "Unauthorized",
+                  "message": "Authentication credentials are missing or invalid."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCampaigns_error"
+                },
+                "example": {
+                  "code": "PermissionDenied",
+                  "message": "Insufficient permissions to perform this operation."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCampaigns_error"
+                },
+                "example": {
+                  "code": "NotFound",
+                  "message": "The requested resource was not found or is inaccessible"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate Limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCampaigns_error"
+                },
+                "example": {
+                  "code": "RateLimitExceeded",
+                  "message": "Request limit exceeded."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCampaigns_error"
+                },
+                "example": {
+                  "code": "Internal",
+                  "message": "An unexpected server error occurred."
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-campaigns",
+        "tags": [
+          "Campaigns"
+        ]
+      },
+      "post": {
+        "summary": "Create Campaigns",
+        "description": "Create one or more campaigns for an account.",
+        "security": [
+          {
+            "auth": [
+              "ads.campaigns.write"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "description": "Ad account identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "campaigns": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/CreateCampaigns_CreateCampaignInput"
+                    },
+                    "description": "List of campaigns to create"
+                  }
+                }
+              },
+              "example": {
+                "campaigns": [
+                  {
+                    "name": "Q1 Spring Promotion Campaign",
+                    "configured_status": "CAMPAIGN_CONFIGURED_STATUS_ACTIVE",
+                    "budget": {
+                      "unit": "BUDGET_UNIT_DAILY",
+                      "total": {
+                        "amount_e5": "50000",
+                        "currency_code": "USD"
+                      }
+                    }
+                  },
+                  {
+                    "name": "Weekend Special Campaign",
+                    "configured_status": "CAMPAIGN_CONFIGURED_STATUS_PAUSED",
+                    "budget": {
+                      "unit": "BUDGET_UNIT_WEEKLY",
+                      "total": {
+                        "amount_e5": "100000",
+                        "currency_code": "USD"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CreateCampaigns_OperationResult"
+                      },
+                      "description": "Results of the create operations"
+                    }
+                  }
+                },
+                "example": {
+                  "results": [
+                    {
+                      "success": {
+                        "id": "00117dad-f83f-4a38-9192-a371250ff09e"
+                      }
+                    },
+                    {
+                      "success": {
+                        "id": "02416290-cf7b-4f17-ab46-f77cb13f5051"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCampaigns_error"
+                },
+                "example": {
+                  "code": "BadRequest",
+                  "message": "Invalid request format or parameters."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCampaigns_error"
+                },
+                "example": {
+                  "code": "Unauthorized",
+                  "message": "Authentication credentials are missing or invalid."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCampaigns_error"
+                },
+                "example": {
+                  "code": "PermissionDenied",
+                  "message": "Insufficient permissions to perform this operation."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCampaigns_error"
+                },
+                "example": {
+                  "code": "NotFound",
+                  "message": "The requested resource was not found or is inaccessible"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate Limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCampaigns_error"
+                },
+                "example": {
+                  "code": "RateLimitExceeded",
+                  "message": "Request limit exceeded."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCampaigns_error"
+                },
+                "example": {
+                  "code": "Internal",
+                  "message": "An unexpected server error occurred."
+                }
+              }
+            }
+          }
+        },
+        "operationId": "create-campaigns",
+        "tags": [
+          "Campaigns"
+        ]
+      },
+      "patch": {
+        "summary": "Update Campaigns",
+        "description": "Update one or more existing campaigns for an account.",
+        "security": [
+          {
+            "auth": [
+              "ads.campaigns.write"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "description": "Ad account identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "campaigns": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/UpdateCampaigns_UpdateCampaignInput"
+                    },
+                    "description": "List of campaigns to update"
+                  }
+                }
+              },
+              "example": {
+                "campaigns": [
+                  {
+                    "campaign_id": "00117dad-f83f-4a38-9192-a371250ff09e",
+                    "name": "Q1 Spring Promotion Campaign - Updated",
+                    "configured_status": "CAMPAIGN_CONFIGURED_STATUS_PAUSED",
+                    "budget": {
+                      "unit": "BUDGET_UNIT_DAILY",
+                      "total": {
+                        "amount_e5": "75000",
+                        "currency_code": "USD"
+                      }
+                    }
+                  },
+                  {
+                    "campaign_id": "02416290-cf7b-4f17-ab46-f77cb13f5051",
+                    "configured_status": "CAMPAIGN_CONFIGURED_STATUS_ACTIVE"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UpdateCampaigns_OperationResult"
+                      },
+                      "description": "Results of the update operations"
+                    }
+                  }
+                },
+                "example": {
+                  "results": [
+                    {
+                      "success": {
+                        "id": "00117dad-f83f-4a38-9192-a371250ff09e"
+                      }
+                    },
+                    {
+                      "success": {
+                        "id": "02416290-cf7b-4f17-ab46-f77cb13f5051"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCampaigns_error"
+                },
+                "example": {
+                  "code": "BadRequest",
+                  "message": "Invalid request format or parameters."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCampaigns_error"
+                },
+                "example": {
+                  "code": "Unauthorized",
+                  "message": "Authentication credentials are missing or invalid."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCampaigns_error"
+                },
+                "example": {
+                  "code": "PermissionDenied",
+                  "message": "Insufficient permissions to perform this operation."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCampaigns_error"
+                },
+                "example": {
+                  "code": "NotFound",
+                  "message": "The requested resource was not found or is inaccessible"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate Limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCampaigns_error"
+                },
+                "example": {
+                  "code": "RateLimitExceeded",
+                  "message": "Request limit exceeded."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCampaigns_error"
+                },
+                "example": {
+                  "code": "Internal",
+                  "message": "An unexpected server error occurred."
+                }
+              }
+            }
+          }
+        },
+        "operationId": "update-campaigns",
+        "tags": [
+          "Campaigns"
+        ]
+      }
+    },
+    "/v1/ads/{account_id}/campaigns/{campaign_id}/ad-groups": {
+      "get": {
+        "summary": "Get Ad Groups",
+        "description": "Retrieve ad groups for a specific campaign.",
+        "security": [
+          {
+            "auth": [
+              "ads.campaigns.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "description": "Account identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "description": "Campaign identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_token",
+            "required": false,
+            "description": "Page token for pagination",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_limit",
+            "required": false,
+            "description": "Number of results to return (Max 2000)",
+            "schema": {
+              "type": "integer",
+              "maximum": 2000
+            }
+          },
+          {
+            "in": "query",
+            "name": "ad_group_id",
+            "required": false,
+            "description": "Filter by specific ad group ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ad_groups": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GetAdGroups_AdGroup"
+                      },
+                      "description": "List of ad group objects"
+                    },
+                    "next_page_token": {
+                      "$ref": "#/components/schemas/GetAdGroups_PageToken"
+                    }
+                  }
+                },
+                "example": {
+                  "ad_groups": [
+                    {
+                      "ad_group_id": "41dd6ced-2465-5e8d-a686-bad20c1de101",
+                      "campaign_id": "02416290-cf7b-4f17-ab46-f77cb13f5051",
+                      "name": "National Brands Holiday Campaign - Ad Group 1",
+                      "ad_product": "SPONSORED_LISTING",
+                      "schedule": {
+                        "start_time": "2023-12-18T05:00:00Z",
+                        "end_time": "2024-01-01T05:00:00Z"
+                      },
+                      "budget": {
+                        "unit": "BUDGET_UNIT_WEEKLY",
+                        "total": {
+                          "amount_e5": "25000",
+                          "currency_code": "USD"
+                        },
+                        "cofunding_sources": [
+                          {
+                            "funding_percentage": 70
+                          }
+                        ]
+                      },
+                      "bidding": {
+                        "auto": {}
+                      },
+                      "targeting": {
+                        "negation": false,
+                        "operator": "AND",
+                        "criteria": [
+                          {
+                            "keyword_targeting": {
+                              "keywords": [
+                                "pizza",
+                                "pasta",
+                                "italian food"
+                              ],
+                              "match_type": "MATCH_TYPE_EXACT"
+                            }
+                          }
+                        ]
+                      },
+                      "dayparting_schedule": {
+                        "dayparting_day_schedule": [
+                          {
+                            "intervals": [
+                              {
+                                "start_time": {
+                                  "hour": 6,
+                                  "minute": 0
+                                },
+                                "end_time": {
+                                  "hour": 22,
+                                  "minute": 0
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "intervals": [
+                              {
+                                "start_time": {
+                                  "hour": 6,
+                                  "minute": 0
+                                },
+                                "end_time": {
+                                  "hour": 22,
+                                  "minute": 0
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "intervals": [
+                              {
+                                "start_time": {
+                                  "hour": 6,
+                                  "minute": 0
+                                },
+                                "end_time": {
+                                  "hour": 22,
+                                  "minute": 0
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "intervals": [
+                              {
+                                "start_time": {
+                                  "hour": 6,
+                                  "minute": 0
+                                },
+                                "end_time": {
+                                  "hour": 22,
+                                  "minute": 0
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "intervals": [
+                              {
+                                "start_time": {
+                                  "hour": 6,
+                                  "minute": 0
+                                },
+                                "end_time": {
+                                  "hour": 22,
+                                  "minute": 0
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "intervals": [
+                              {
+                                "start_time": {
+                                  "hour": 6,
+                                  "minute": 0
+                                },
+                                "end_time": {
+                                  "hour": 24,
+                                  "minute": 0
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "intervals": [
+                              {
+                                "start_time": {
+                                  "hour": 6,
+                                  "minute": 0
+                                },
+                                "end_time": {
+                                  "hour": 24,
+                                  "minute": 0
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "subjects": {
+                        "stores": {
+                          "store_ids": [
+                            "65681a33-d4b2-4e23-b9a2-8e9fd44f0b60"
+                          ]
+                        }
+                      },
+                      "configured_status": "AD_GROUP_CONFIGURED_STATUS_ACTIVE",
+                      "effective_status": "AD_GROUP_EFFECTIVE_STATUS_ACTIVE",
+                      "permissions": [
+                        "READ",
+                        "UPDATE",
+                        "DELETE"
+                      ]
+                    },
+                    {
+                      "ad_group_id": "f1768d22-414e-4dfa-8871-0c0ae345092d",
+                      "campaign_id": "03527abc-8d4e-4c19-bc67-f88da25ef203",
+                      "name": "Asian Cuisine Targeting Group",
+                      "ad_product": "SPONSORED_SEARCH",
+                      "schedule": {
+                        "start_time": "2025-08-21T21:00:00Z"
+                      },
+                      "budget": {
+                        "unit": "BUDGET_UNIT_DAILY",
+                        "total": {
+                          "amount_e5": "30000",
+                          "currency_code": "USD"
+                        },
+                        "cofunding_sources": [
+                          {
+                            "funding_percentage": 70
+                          }
+                        ]
+                      },
+                      "bidding": {
+                        "auto": {}
+                      },
+                      "targeting": {
+                        "negation": false,
+                        "operator": "AND",
+                        "criteria": [
+                          {
+                            "keyword_targeting": {
+                              "keywords": [
+                                "sushi",
+                                "asian fusion",
+                                "takeout"
+                              ],
+                              "match_type": "MATCH_TYPE_BROAD"
+                            }
+                          }
+                        ]
+                      },
+                      "subjects": {
+                        "stores": {
+                          "store_ids": [
+                            "9ec56511-e1d6-4361-86b3-0e35f55fe24f"
+                          ]
+                        }
+                      },
+                      "configured_status": "AD_GROUP_CONFIGURED_STATUS_ACTIVE",
+                      "effective_status": "AD_GROUP_EFFECTIVE_STATUS_ACTIVE",
+                      "permissions": [
+                        "READ",
+                        "UPDATE"
+                      ]
+                    }
+                  ],
+                  "next_page_token": {
+                    "value": "eyJsYXN0X2FkX2dyb3VwX2lkIjoiNDFkZDZjZWQtMjQ2NS01ZThkLWE2ODYtYmFkMjBjMWRlMTAxIn0"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdGroups_error"
+                },
+                "example": {
+                  "code": "BadRequest",
+                  "message": "Invalid request format or parameters."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdGroups_error"
+                },
+                "example": {
+                  "code": "Unauthorized",
+                  "message": "Authentication credentials are missing or invalid."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdGroups_error"
+                },
+                "example": {
+                  "code": "PermissionDenied",
+                  "message": "Insufficient permissions to perform this operation."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdGroups_error"
+                },
+                "example": {
+                  "code": "NotFound",
+                  "message": "The requested resource was not found or is inaccessible"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate Limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdGroups_error"
+                },
+                "example": {
+                  "code": "RateLimitExceeded",
+                  "message": "Request limit exceeded."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAdGroups_error"
+                },
+                "example": {
+                  "code": "Internal",
+                  "message": "An unexpected server error occurred."
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-ad-groups",
+        "tags": [
+          "Ad Groups"
+        ]
+      },
+      "post": {
+        "summary": "Create Ad Groups",
+        "description": "Create one or more ad groups within a campaign.",
+        "security": [
+          {
+            "auth": [
+              "ads.campaigns.write"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "description": "Ad account identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "description": "Campaign identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ad_groups": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/CreateAdGroups_CreateAdGroupInput"
+                    },
+                    "description": "List of ad groups to create"
+                  }
+                }
+              },
+              "example": {
+                "ad_groups": [
+                  {
+                    "name": "Downtown Store Promotion",
+                    "ad_product": "SPONSORED_LISTING",
+                    "configured_status": "AD_GROUP_CONFIGURED_STATUS_ACTIVE",
+                    "budget": {
+                      "unit": "BUDGET_UNIT_DAILY",
+                      "total": {
+                        "amount_e5": "25000",
+                        "currency_code": "USD"
+                      }
+                    },
+                    "schedule": {
+                      "start_time": "2024-01-01T00:00:00Z"
+                    },
+                    "dayparting_schedule": {
+                      "dayparting_day_schedule": [
+                        {
+                          "intervals": [
+                            {
+                              "start_time": {
+                                "hour": 6,
+                                "minute": 0
+                              },
+                              "end_time": {
+                                "hour": 22,
+                                "minute": 0
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "intervals": [
+                            {
+                              "start_time": {
+                                "hour": 6,
+                                "minute": 0
+                              },
+                              "end_time": {
+                                "hour": 22,
+                                "minute": 0
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "intervals": [
+                            {
+                              "start_time": {
+                                "hour": 6,
+                                "minute": 0
+                              },
+                              "end_time": {
+                                "hour": 22,
+                                "minute": 0
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "intervals": [
+                            {
+                              "start_time": {
+                                "hour": 6,
+                                "minute": 0
+                              },
+                              "end_time": {
+                                "hour": 22,
+                                "minute": 0
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "intervals": [
+                            {
+                              "start_time": {
+                                "hour": 6,
+                                "minute": 0
+                              },
+                              "end_time": {
+                                "hour": 22,
+                                "minute": 0
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "intervals": [
+                            {
+                              "start_time": {
+                                "hour": 6,
+                                "minute": 0
+                              },
+                              "end_time": {
+                                "hour": 24,
+                                "minute": 0
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "intervals": [
+                            {
+                              "start_time": {
+                                "hour": 6,
+                                "minute": 0
+                              },
+                              "end_time": {
+                                "hour": 24,
+                                "minute": 0
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "bidding": {
+                      "auto": {}
+                    },
+                    "targeting": {
+                      "negation": false,
+                      "operator": "AND",
+                      "criteria": [
+                        {
+                          "uber_one": {}
+                        }
+                      ]
+                    },
+                    "ad_subjects": {
+                      "stores": {
+                        "store_ids": [
+                          "store-123",
+                          "store-456"
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CreateAdGroups_OperationResult"
+                      },
+                      "description": "Results of the create operations"
+                    }
+                  }
+                },
+                "example": {
+                  "results": [
+                    {
+                      "success": {
+                        "id": "379638e6-5ecf-5b27-af83-68368ee3f597"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAdGroups_error"
+                },
+                "example": {
+                  "code": "BadRequest",
+                  "message": "Invalid request format or parameters."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAdGroups_error"
+                },
+                "example": {
+                  "code": "Unauthorized",
+                  "message": "Authentication credentials are missing or invalid."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAdGroups_error"
+                },
+                "example": {
+                  "code": "PermissionDenied",
+                  "message": "Insufficient permissions to perform this operation."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAdGroups_error"
+                },
+                "example": {
+                  "code": "NotFound",
+                  "message": "The requested resource was not found or is inaccessible"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate Limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAdGroups_error"
+                },
+                "example": {
+                  "code": "RateLimitExceeded",
+                  "message": "Request limit exceeded."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAdGroups_error"
+                },
+                "example": {
+                  "code": "Internal",
+                  "message": "An unexpected server error occurred."
+                }
+              }
+            }
+          }
+        },
+        "operationId": "create-ad-groups",
+        "tags": [
+          "Ad Groups"
+        ]
+      },
+      "patch": {
+        "summary": "Update Ad Groups",
+        "description": "Update one or more existing ad groups within a campaign.",
+        "security": [
+          {
+            "auth": [
+              "ads.campaigns.write"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "description": "Ad account identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "description": "Campaign identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ad_groups": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/UpdateAdGroups_UpdateAdGroupInput"
+                    },
+                    "description": "List of ad groups to update"
+                  }
+                }
+              },
+              "example": {
+                "ad_groups": [
+                  {
+                    "ad_group_id": "379638e6-5ecf-5b27-af83-68368ee3f597",
+                    "name": "Downtown Store Promotion - Updated",
+                    "configured_status": "AD_GROUP_CONFIGURED_STATUS_PAUSED",
+                    "budget": {
+                      "unit": "BUDGET_UNIT_DAILY",
+                      "total": {
+                        "amount_e5": "35000",
+                        "currency_code": "USD"
+                      }
+                    },
+                    "bidding": {
+                      "manual": {
+                        "bid_amount": {
+                          "amount_e5": "15000",
+                          "currency_code": "USD"
+                        }
+                      }
+                    },
+                    "targeting": {
+                      "negation": false,
+                      "operator": "AND",
+                      "criteria": [
+                        {
+                          "uber_one": {}
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UpdateAdGroups_OperationResult"
+                      },
+                      "description": "Results of the update operations"
+                    }
+                  }
+                },
+                "example": {
+                  "results": [
+                    {
+                      "success": {
+                        "id": "379638e6-5ecf-5b27-af83-68368ee3f597"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAdGroups_error"
+                },
+                "example": {
+                  "code": "BadRequest",
+                  "message": "Invalid request format or parameters."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAdGroups_error"
+                },
+                "example": {
+                  "code": "Unauthorized",
+                  "message": "Authentication credentials are missing or invalid."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAdGroups_error"
+                },
+                "example": {
+                  "code": "PermissionDenied",
+                  "message": "Insufficient permissions to perform this operation."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAdGroups_error"
+                },
+                "example": {
+                  "code": "NotFound",
+                  "message": "The requested resource was not found or is inaccessible"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate Limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAdGroups_error"
+                },
+                "example": {
+                  "code": "RateLimitExceeded",
+                  "message": "Request limit exceeded."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAdGroups_error"
+                },
+                "example": {
+                  "code": "Internal",
+                  "message": "An unexpected server error occurred."
+                }
+              }
+            }
+          }
+        },
+        "operationId": "update-ad-groups",
+        "tags": [
+          "Ad Groups"
+        ]
+      }
+    },
+    "/v1/ads/{account_id}/campaigns/{campaign_id}/ad-groups/{ad_group_id}/ads": {
+      "get": {
+        "summary": "Get Ads",
+        "description": "Retrieve a list of ads within an ad group.",
+        "security": [
+          {
+            "auth": [
+              "ads.campaigns.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "description": "Ad account identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "description": "Campaign identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "ad_group_id",
+            "required": true,
+            "description": "Ad group identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_token",
+            "required": false,
+            "description": "Page token for pagination",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_limit",
+            "required": false,
+            "description": "Number of results to return (Max 2000)",
+            "schema": {
+              "type": "integer",
+              "maximum": 2000
+            }
+          },
+          {
+            "in": "query",
+            "name": "ad_id",
+            "required": false,
+            "description": "Filter by specific ad ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ads": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GetAds_Ad"
+                      },
+                      "description": "List of ad objects"
+                    },
+                    "next_page_token": {
+                      "$ref": "#/components/schemas/GetAds_PageToken"
+                    }
+                  }
+                },
+                "example": {
+                  "ads": [
+                    {
+                      "ad_id": "ad-123-456-789",
+                      "ad_group_id": "379638e6-5ecf-5b27-af83-68368ee3f597",
+                      "campaign_id": "00117dad-f83f-4a38-9192-a371250ff09e",
+                      "name": "Downtown Store Ad"
+                    },
+                    {
+                      "ad_id": "ad-987-654-321",
+                      "ad_group_id": "379638e6-5ecf-5b27-af83-68368ee3f597",
+                      "campaign_id": "00117dad-f83f-4a38-9192-a371250ff09e",
+                      "name": "Weekend Special Ad"
+                    }
+                  ],
+                  "next_page_token": {
+                    "value": "eyJsYXN0X2FkX2lkIjoiYWQtOTg3LTY1NC0zMjEifQ"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAds_error"
+                },
+                "example": {
+                  "code": "BadRequest",
+                  "message": "Invalid request format or parameters."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAds_error"
+                },
+                "example": {
+                  "code": "Unauthorized",
+                  "message": "Authentication credentials are missing or invalid."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAds_error"
+                },
+                "example": {
+                  "code": "PermissionDenied",
+                  "message": "Insufficient permissions to perform this operation."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAds_error"
+                },
+                "example": {
+                  "code": "NotFound",
+                  "message": "The requested resource was not found or is inaccessible"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate Limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAds_error"
+                },
+                "example": {
+                  "code": "RateLimitExceeded",
+                  "message": "Request limit exceeded."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAds_error"
+                },
+                "example": {
+                  "code": "Internal",
+                  "message": "An unexpected server error occurred."
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-ads",
+        "tags": [
+          "Ads"
+        ]
+      },
+      "post": {
+        "summary": "Create Ads",
+        "description": "Create one or more ads within an ad group.",
+        "security": [
+          {
+            "auth": [
+              "ads.campaigns.write"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "description": "Ad account identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "description": "Campaign identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "ad_group_id",
+            "required": true,
+            "description": "Ad group identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ads": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/CreateAds_CreateAdInput"
+                    },
+                    "description": "List of ads to create"
+                  }
+                }
+              },
+              "example": {
+                "ads": [
+                  {
+                    "name": "Downtown Store Ad"
+                  },
+                  {
+                    "name": "Weekend Special Ad"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CreateAds_OperationResult"
+                      },
+                      "description": "Results of the create operations"
+                    }
+                  }
+                },
+                "example": {
+                  "results": [
+                    {
+                      "success": {
+                        "id": "ad-123-456-789"
+                      }
+                    },
+                    {
+                      "success": {
+                        "id": "ad-987-654-321"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAds_error"
+                },
+                "example": {
+                  "code": "BadRequest",
+                  "message": "Invalid request format or parameters."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAds_error"
+                },
+                "example": {
+                  "code": "Unauthorized",
+                  "message": "Authentication credentials are missing or invalid."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAds_error"
+                },
+                "example": {
+                  "code": "PermissionDenied",
+                  "message": "Insufficient permissions to perform this operation."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAds_error"
+                },
+                "example": {
+                  "code": "NotFound",
+                  "message": "The requested resource was not found or is inaccessible"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate Limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAds_error"
+                },
+                "example": {
+                  "code": "RateLimitExceeded",
+                  "message": "Request limit exceeded."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAds_error"
+                },
+                "example": {
+                  "code": "Internal",
+                  "message": "An unexpected server error occurred."
+                }
+              }
+            }
+          }
+        },
+        "operationId": "create-ads",
+        "tags": [
+          "Ads"
+        ]
+      },
+      "patch": {
+        "summary": "Update Ads",
+        "description": "Update one or more existing ads within an ad group.",
+        "security": [
+          {
+            "auth": [
+              "ads.campaigns.write"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "description": "Ad account identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "campaign_id",
+            "required": true,
+            "description": "Campaign identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "ad_group_id",
+            "required": true,
+            "description": "Ad group identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ads": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/UpdateAds_UpdateAdInput"
+                    },
+                    "description": "List of ads to update"
+                  }
+                }
+              },
+              "example": {
+                "ads": [
+                  {
+                    "ad_id": "ad-123-456-789",
+                    "name": "Downtown Store Ad - Updated"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UpdateAds_OperationResult"
+                      },
+                      "description": "Results of the update operations"
+                    }
+                  }
+                },
+                "example": {
+                  "results": [
+                    {
+                      "success": {
+                        "id": "ad-123-456-789"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAds_error"
+                },
+                "example": {
+                  "code": "BadRequest",
+                  "message": "Invalid request format or parameters."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAds_error"
+                },
+                "example": {
+                  "code": "Unauthorized",
+                  "message": "Authentication credentials are missing or invalid."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAds_error"
+                },
+                "example": {
+                  "code": "PermissionDenied",
+                  "message": "Insufficient permissions to perform this operation."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAds_error"
+                },
+                "example": {
+                  "code": "NotFound",
+                  "message": "The requested resource was not found or is inaccessible"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate Limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAds_error"
+                },
+                "example": {
+                  "code": "RateLimitExceeded",
+                  "message": "Request limit exceeded."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAds_error"
+                },
+                "example": {
+                  "code": "Internal",
+                  "message": "An unexpected server error occurred."
+                }
+              }
+            }
+          }
+        },
+        "operationId": "update-ads",
+        "tags": [
+          "Ads"
+        ]
+      }
+    },
+    "/v1/ads/{account_id}/products": {
+      "get": {
+        "summary": "Get Products",
+        "description": "Retrieve product information for advertising inventory.\n\n**Note: Product catalog data may be updated every 4 hours.**\n",
+        "security": [
+          {
+            "auth": [
+              "ads.products.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "description": "Account identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_token",
+            "required": false,
+            "description": "Page token for pagination",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_limit",
+            "required": false,
+            "description": "Number of results to return (Max 2000)",
+            "schema": {
+              "type": "integer",
+              "maximum": 2000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "products": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GetProducts_Product"
+                      },
+                      "description": "List of product objects"
+                    },
+                    "next_page_token": {
+                      "$ref": "#/components/schemas/GetProducts_PageToken"
+                    }
+                  }
+                },
+                "example": {
+                  "products": [
+                    {
+                      "gtin": "0123456789012",
+                      "product_name": "Classic Margherita Pizza",
+                      "brand_owner_name": "Tony's Italian Kitchen",
+                      "brand_name": "Tony's",
+                      "main_image_url": "https://images.uber.com/products/margherita-pizza-001.jpg",
+                      "size": "25 oz"
+                    },
+                    {
+                      "gtin": "0987654321098",
+                      "product_name": "Chicago Deep Dish Special",
+                      "brand_owner_name": "Windy City Pizza Co",
+                      "brand_name": "Windy City",
+                      "main_image_url": "https://images.uber.com/products/deep-dish-special-002.jpg",
+                      "size": "32 oz"
+                    },
+                    {
+                      "gtin": "0456789123456",
+                      "product_name": "Fresh Caesar Salad",
+                      "brand_owner_name": "Garden Bistro",
+                      "brand_name": "Garden",
+                      "main_image_url": "https://images.uber.com/products/caesar-salad-003.jpg",
+                      "size": "18 oz"
+                    }
+                  ],
+                  "next_page_token": {
+                    "value": "eyJsYXN0X3Byb2R1Y3RfZ3RpbiI6IjA0NTY3ODkxMjM0NTYifQ"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProducts_error"
+                },
+                "example": {
+                  "code": "BadRequest",
+                  "message": "Invalid request format or parameters."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProducts_error"
+                },
+                "example": {
+                  "code": "Unauthorized",
+                  "message": "Authentication credentials are missing or invalid."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProducts_error"
+                },
+                "example": {
+                  "code": "PermissionDenied",
+                  "message": "Insufficient permissions to perform this operation."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProducts_error"
+                },
+                "example": {
+                  "code": "NotFound",
+                  "message": "The requested resource was not found or is inaccessible"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate Limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProducts_error"
+                },
+                "example": {
+                  "code": "RateLimitExceeded",
+                  "message": "Request limit exceeded."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProducts_error"
+                },
+                "example": {
+                  "code": "Internal",
+                  "message": "An unexpected server error occurred."
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-products",
+        "tags": [
+          "Product Catalog"
+        ]
+      }
+    },
+    "/v1/ads/{account_id}/reporting/report": {
+      "post": {
+        "summary": "Generate Report",
+        "description": "Request an asynchronous report with advertising metrics including performance, keyword, and category data.",
+        "security": [
+          {
+            "auth": [
+              "ads.reporting"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "description": "Account identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Report generation request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReports_ExternalSubmitReportJobRequest"
+              },
+              "example": {
+                "report_type": "AD_PERFORMANCE",
+                "time_range": {
+                  "start_time": "2025-08-01T00:00:00Z",
+                  "end_time": "2025-08-21T00:00:00Z"
+                },
+                "columns": [
+                  "campaign_id",
+                  "ad_group_id",
+                  "impressions",
+                  "clicks",
+                  "ad_spend",
+                  "sales_7d_on_click_date",
+                  "orders_7d_on_click_date",
+                  "roas_7d_on_click_date",
+                  "cost_per_click"
+                ],
+                "time_unit": "DAILY",
+                "filters": [
+                  {
+                    "column": "campaign_id",
+                    "operator": "EQUAL",
+                    "values": [
+                      "13529bf9-328e-5cf9-b2a7-b670334c2bd9"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateReports_ExternalSubmitReportJobResponse"
+                },
+                "example": {
+                  "report_id": "report_abc123def456"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateReports_error"
+                },
+                "example": {
+                  "code": "BadRequest",
+                  "message": "Invalid request format or parameters."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateReports_error"
+                },
+                "example": {
+                  "code": "Unauthorized",
+                  "message": "Authentication credentials are missing or invalid."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateReports_error"
+                },
+                "example": {
+                  "code": "PermissionDenied",
+                  "message": "Insufficient permissions to perform this operation."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateReports_error"
+                },
+                "example": {
+                  "code": "NotFound",
+                  "message": "The requested resource was not found or is inaccessible"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate Limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateReports_error"
+                },
+                "example": {
+                  "code": "RateLimitExceeded",
+                  "message": "Request limit exceeded."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateReports_error"
+                },
+                "example": {
+                  "code": "Internal",
+                  "message": "An unexpected server error occurred."
+                }
+              }
+            }
+          }
+        },
+        "operationId": "create-reports",
+        "tags": [
+          "Reporting"
+        ]
+      }
+    },
+    "/v1/ads/{account_id}/reporting/{report_id}": {
+      "get": {
+        "summary": "Get Report Status",
+        "description": "Check the status of a report generation request and retrieve the download URL when ready.\n\nThe download URL expires 5 minutes after the report status becomes `COMPLETED`.\n",
+        "security": [
+          {
+            "auth": [
+              "ads.reporting"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "description": "Account identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "report_id",
+            "required": true,
+            "description": "Report identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetReport_ExternalGetReportJobStatusResponse"
+                },
+                "example": {
+                  "status": "COMPLETED",
+                  "result": {
+                    "success_result": {
+                      "report_url": "https://reports.uber.com/download/abc123def456",
+                      "file_size": "1048576",
+                      "url_expires_at": "2024-02-01T00:00:00Z",
+                      "report_schema": [
+                        "campaign_id",
+                        "impressions",
+                        "clicks",
+                        "spend"
+                      ]
+                    },
+                    "started_at": "2024-01-01T10:00:00Z",
+                    "finished_at": "2024-01-01T10:05:30Z"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetReport_error"
+                },
+                "example": {
+                  "code": "BadRequest",
+                  "message": "Invalid request format or parameters."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetReport_error"
+                },
+                "example": {
+                  "code": "Unauthorized",
+                  "message": "Authentication credentials are missing or invalid."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetReport_error"
+                },
+                "example": {
+                  "code": "PermissionDenied",
+                  "message": "Insufficient permissions to perform this operation."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetReport_error"
+                },
+                "example": {
+                  "code": "NotFound",
+                  "message": "The requested resource was not found or is inaccessible"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate Limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetReport_error"
+                },
+                "example": {
+                  "code": "RateLimitExceeded",
+                  "message": "Request limit exceeded."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetReport_error"
+                },
+                "example": {
+                  "code": "Internal",
+                  "message": "An unexpected server error occurred."
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-report",
+        "tags": [
+          "Reporting"
+        ]
+      }
+    },
+    "/v1/ads/{account_id}/reporting/sync": {
+      "post": {
+        "summary": "Sync Report",
+        "description": "Request a synchronous report that returns advertising metrics immediately in the response. Ideal for real-time dashboards and interactive analytics.",
+        "security": [
+          {
+            "auth": [
+              "ads.reporting"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "account_id",
+            "required": true,
+            "description": "Account identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Sync report request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SyncReport_SyncReportRequest"
+              },
+              "example": {
+                "report_type": "AD_PERFORMANCE",
+                "time_range": {
+                  "start_time": "2025-11-03T00:00:00Z",
+                  "end_time": "2025-11-05T00:00:00Z"
+                },
+                "columns": [
+                  "campaign_id",
+                  "ad_group_id",
+                  "impressions",
+                  "clicks",
+                  "ad_spend",
+                  "sales_7d_on_click_date",
+                  "roas_7d_on_click_date"
+                ],
+                "time_unit": "DAILY",
+                "filters": [
+                  {
+                    "column": "campaign_id",
+                    "operator": "EQUAL",
+                    "values": [
+                      "13529bf9-328e-5cf9-b2a7-b670334c2bd9"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncReport_SyncReportResponse"
+                },
+                "example": {
+                  "schema": {
+                    "columns": [
+                      {
+                        "name": "day_of",
+                        "type": "COLUMN_TYPE_TIMESTAMP"
+                      },
+                      {
+                        "name": "campaign_id",
+                        "type": "COLUMN_TYPE_STRING"
+                      },
+                      {
+                        "name": "ad_group_id",
+                        "type": "COLUMN_TYPE_STRING"
+                      },
+                      {
+                        "name": "impressions",
+                        "type": "COLUMN_TYPE_INT64"
+                      },
+                      {
+                        "name": "clicks",
+                        "type": "COLUMN_TYPE_INT64"
+                      },
+                      {
+                        "name": "ad_spend",
+                        "type": "COLUMN_TYPE_DOUBLE"
+                      },
+                      {
+                        "name": "sales_7d_on_click_date",
+                        "type": "COLUMN_TYPE_DOUBLE"
+                      },
+                      {
+                        "name": "roas_7d_on_click_date",
+                        "type": "COLUMN_TYPE_DOUBLE"
+                      }
+                    ]
+                  },
+                  "data": {
+                    "rows": [
+                      {
+                        "values": [
+                          "2025-11-04T00:00:00Z",
+                          "{campaign_uuid}",
+                          "{ad_group_uuid}",
+                          "8428",
+                          "506",
+                          "159.35",
+                          "2250",
+                          "14.119861939127706"
+                        ]
+                      },
+                      {
+                        "values": [
+                          "2025-11-03T00:00:00Z",
+                          "{campaign_uuid}",
+                          "{ad_group_uuid}",
+                          "6677",
+                          "457",
+                          "111.92",
+                          "2201.26",
+                          "19.668155825589707"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncReport_error"
+                },
+                "example": {
+                  "code": "BadRequest",
+                  "message": "Invalid request format or parameters."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncReport_error"
+                },
+                "example": {
+                  "code": "Unauthorized",
+                  "message": "Authentication credentials are missing or invalid."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncReport_error"
+                },
+                "example": {
+                  "code": "PermissionDenied",
+                  "message": "Insufficient permissions to perform this operation."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncReport_error"
+                },
+                "example": {
+                  "code": "NotFound",
+                  "message": "The requested resource was not found or is inaccessible"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate Limited",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncReport_error"
+                },
+                "example": {
+                  "code": "RateLimitExceeded",
+                  "message": "Request limit exceeded."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncReport_error"
+                },
+                "example": {
+                  "code": "Internal",
+                  "message": "An unexpected server error occurred."
+                }
+              }
+            }
+          }
+        },
+        "operationId": "sync-report",
+        "tags": [
+          "Reporting"
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "auth": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://login.uber.com/oauth/v2/authorize",
+            "tokenUrl": "https://login.uber.com/oauth/v2/token",
+            "scopes": {
+              "ads.ad-accounts.read": "Read access to ad account data",
+              "ads.campaigns.read": "Read access to campaign data",
+              "ads.campaigns.write": "Write access to campaign data",
+              "ads.products.read": "Read access to product endpoints",
+              "ads.reporting": "Access to reporting endpoints"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "GetAdAccounts_AdAccount": {
+        "type": "object",
+        "properties": {
+          "ad_account_id": {
+            "type": "string",
+            "description": "Unique ad account identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Ad account name"
+          },
+          "country_code": {
+            "type": "string",
+            "description": "Country code of the ad account (ISO 3166-1 alpha-2)"
+          },
+          "currency_code": {
+            "type": "string",
+            "description": "Currency code of the ad account (ISO 4217)"
+          },
+          "account_type": {
+            "type": "string",
+            "description": "Type of ad account. See [AdAccount](/docs/ads/references/models/v1/ad-account) for value descriptions and [Ad Products](/docs/ads/campaign-management/ad-products) for campaign-creation eligibility by type.",
+            "enum": [
+              "OFD",
+              "USER_STORES_GROUP",
+              "AGENCY",
+              "INTERNAL",
+              "UNKNOWN"
+            ]
+          },
+          "billing": {
+            "$ref": "#/components/schemas/GetAdAccounts_Billing"
+          }
+        }
+      },
+      "GetAdAccounts_Billing": {
+        "type": "object",
+        "description": "Billing information for the ad account",
+        "properties": {
+          "address": {
+            "$ref": "#/components/schemas/GetAdAccounts_Address"
+          },
+          "type": {
+            "type": "string",
+            "description": "Billing type",
+            "enum": [
+              "ACCOUNT_BILLING_MODE_INVALID",
+              "ACCOUNT_BILLING_MODE_MANUAL",
+              "ACCOUNT_BILLING_MODE_AUTO",
+              "ACCOUNT_BILLING_MODE_UCOMMERCE"
+            ]
+          }
+        }
+      },
+      "GetAdAccounts_Address": {
+        "type": "object",
+        "description": "Billing address information",
+        "properties": {
+          "address_line1": {
+            "type": "string",
+            "description": "Primary address line"
+          },
+          "address_line2": {
+            "type": "string",
+            "description": "Secondary address line (optional, for suite/apartment/etc)"
+          },
+          "city": {
+            "type": "string",
+            "description": "City name"
+          },
+          "state": {
+            "type": "string",
+            "description": "State or province"
+          },
+          "country_code": {
+            "type": "string",
+            "description": "Country code (ISO 3166-1 alpha-2)"
+          },
+          "postal_code": {
+            "type": "string",
+            "description": "Postal or ZIP code"
+          }
+        }
+      },
+      "GetAdAccounts_error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "GetStores_Store": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique store identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Store name"
+          },
+          "currency_code": {
+            "type": "string",
+            "format": "currency-code",
+            "description": "Currency code (ISO 4217)"
+          },
+          "image_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Store image URL"
+          },
+          "address": {
+            "$ref": "#/components/schemas/GetStores_StoreAddress",
+            "description": "Store address"
+          }
+        }
+      },
+      "GetStores_StoreAddress": {
+        "type": "object",
+        "description": "Store address information",
+        "properties": {
+          "address_line1": {
+            "type": "string",
+            "description": "Primary address line"
+          },
+          "address_line2": {
+            "type": "string",
+            "description": "Secondary address line (optional)"
+          },
+          "city": {
+            "type": "string",
+            "description": "City name"
+          },
+          "region": {
+            "type": "string",
+            "description": "State or region"
+          },
+          "postal_code": {
+            "type": "string",
+            "description": "Postal or ZIP code"
+          },
+          "country": {
+            "type": "string",
+            "description": "Country name or code"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "description": "Latitude coordinate"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "description": "Longitude coordinate"
+          }
+        }
+      },
+      "GetStores_PageToken": {
+        "type": "object",
+        "description": "Pagination token for retrieving additional results",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Opaque page token for pagination"
+          }
+        }
+      },
+      "GetStores_error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "GetCampaigns_Campaign": {
+        "type": "object",
+        "properties": {
+          "campaign_id": {
+            "type": "string",
+            "description": "Unique campaign identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Campaign name"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation timestamp (RFC 3339)"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update timestamp (RFC 3339)"
+          },
+          "created_by_email": {
+            "type": "string",
+            "description": "Email of user who created the campaign"
+          },
+          "updated_by_email": {
+            "type": "string",
+            "description": "Email of user who last updated the campaign"
+          },
+          "budget": {
+            "$ref": "#/components/schemas/GetCampaigns_Budget"
+          },
+          "ad_groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetCampaigns_AdGroupSummary"
+            },
+            "description": "Summary of ad groups in this campaign"
+          },
+          "configured_status": {
+            "type": "string",
+            "description": "Status configured by the user"
+          },
+          "effective_status": {
+            "type": "string",
+            "description": "Status representing deliverability of the campaign"
+          },
+          "version": {
+            "type": "integer",
+            "description": "Campaign version number"
+          },
+          "effective_status_reasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Reasons why the campaign is not eligible to be served"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "READ",
+                "UPDATE",
+                "DELETE"
+              ]
+            },
+            "description": "Operations the caller is permitted to perform on this campaign"
+          }
+        }
+      },
+      "GetCampaigns_Budget": {
+        "type": "object",
+        "description": "Budget configuration for campaigns",
+        "properties": {
+          "unit": {
+            "type": "string",
+            "enum": [
+              "BUDGET_UNIT_INVALID",
+              "BUDGET_UNIT_FIXED",
+              "BUDGET_UNIT_DAILY",
+              "BUDGET_UNIT_WEEKLY"
+            ],
+            "description": "Budget time unit"
+          },
+          "total": {
+            "$ref": "#/components/schemas/GetCampaigns_CurrencyAmount",
+            "description": "Total budget amount"
+          },
+          "cofunding_sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetCampaigns_CofundingSource"
+            },
+            "description": "Sources of campaign funding"
+          }
+        }
+      },
+      "GetCampaigns_AdGroupSummary": {
+        "type": "object",
+        "properties": {
+          "ad_group_id": {
+            "type": "string",
+            "description": "Unique ad group identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Ad group name"
+          },
+          "configured_status": {
+            "type": "string",
+            "description": "Status configured by the user"
+          },
+          "effective_status": {
+            "type": "string",
+            "description": "Status representing deliverability of the ad group"
+          },
+          "effective_status_reasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Reasons why the campaign is not eligible to be served"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "READ",
+                "UPDATE",
+                "DELETE"
+              ]
+            },
+            "description": "Operations the caller is permitted to perform on this ad group"
+          }
+        }
+      },
+      "GetCampaigns_CurrencyAmount": {
+        "type": "object",
+        "properties": {
+          "amount_e5": {
+            "type": "string",
+            "format": "currency-amount",
+            "description": "Amount in E5"
+          },
+          "currency_code": {
+            "type": "string",
+            "format": "currency-code",
+            "description": "Currency code (ISO 4217)"
+          }
+        }
+      },
+      "GetCampaigns_CofundingSource": {
+        "type": "object",
+        "properties": {
+          "funding_percentage": {
+            "type": "number",
+            "format": "double",
+            "description": "Percentage of cofunding for this campaign (e.g., 70.0 means 70% of the campaign budget is cofunded)"
+          }
+        }
+      },
+      "GetCampaigns_PageToken": {
+        "type": "object",
+        "description": "Pagination token for retrieving additional results",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Opaque page token for pagination"
+          }
+        }
+      },
+      "GetCampaigns_error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "CreateCampaigns_CreateCampaignInput": {
+        "type": "object",
+        "required": [
+          "name",
+          "configured_status"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Campaign name"
+          },
+          "configured_status": {
+            "type": "string",
+            "enum": [
+              "CAMPAIGN_CONFIGURED_STATUS_ACTIVE",
+              "CAMPAIGN_CONFIGURED_STATUS_PAUSED"
+            ],
+            "description": "Status configured by the user"
+          },
+          "budget": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateCampaigns_BudgetInput"
+              }
+            ],
+            "description": "Budget configuration. Can be set at campaign level (shared across ad groups) or ad group level (more granular control)."
+          }
+        }
+      },
+      "CreateCampaigns_BudgetInput": {
+        "type": "object",
+        "required": [
+          "unit",
+          "total"
+        ],
+        "properties": {
+          "unit": {
+            "type": "string",
+            "enum": [
+              "BUDGET_UNIT_FIXED",
+              "BUDGET_UNIT_DAILY",
+              "BUDGET_UNIT_WEEKLY"
+            ],
+            "description": "Budget time unit"
+          },
+          "total": {
+            "$ref": "#/components/schemas/CreateCampaigns_CurrencyAmountInput",
+            "description": "Total budget amount"
+          }
+        }
+      },
+      "CreateCampaigns_CurrencyAmountInput": {
+        "type": "object",
+        "required": [
+          "amount_e5",
+          "currency_code"
+        ],
+        "properties": {
+          "amount_e5": {
+            "type": "string",
+            "format": "currency-amount",
+            "description": "Amount in E5 format (e.g., \"50000\" represents $0.50)"
+          },
+          "currency_code": {
+            "type": "string",
+            "format": "currency-code",
+            "description": "Currency code (ISO 4217)"
+          }
+        }
+      },
+      "CreateCampaigns_OperationResult": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "success": {
+                "$ref": "#/components/schemas/CreateCampaigns_OperationSuccess"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "failure": {
+                "$ref": "#/components/schemas/CreateCampaigns_OperationFailure"
+              }
+            }
+          }
+        ]
+      },
+      "CreateCampaigns_OperationSuccess": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the created campaign"
+          }
+        }
+      },
+      "CreateCampaigns_OperationFailure": {
+        "type": "object",
+        "properties": {
+          "error_code": {
+            "type": "string",
+            "description": "Error code for the failed operation"
+          },
+          "error_message": {
+            "type": "string",
+            "description": "Error message for the failed operation"
+          }
+        }
+      },
+      "CreateCampaigns_error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "UpdateCampaigns_UpdateCampaignInput": {
+        "type": "object",
+        "description": "Input for updating a campaign.",
+        "required": [
+          "campaign_id"
+        ],
+        "properties": {
+          "campaign_id": {
+            "type": "string",
+            "description": "Unique campaign identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Campaign name"
+          },
+          "configured_status": {
+            "type": "string",
+            "enum": [
+              "CAMPAIGN_CONFIGURED_STATUS_ACTIVE",
+              "CAMPAIGN_CONFIGURED_STATUS_PAUSED"
+            ],
+            "description": "Status configured by the user"
+          },
+          "budget": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdateCampaigns_BudgetInput"
+              }
+            ],
+            "description": "Budget configuration for the campaign. Providing an empty budget removes the budget from the campaign."
+          }
+        }
+      },
+      "UpdateCampaigns_BudgetInput": {
+        "type": "object",
+        "required": [
+          "unit",
+          "total"
+        ],
+        "properties": {
+          "unit": {
+            "type": "string",
+            "enum": [
+              "BUDGET_UNIT_FIXED",
+              "BUDGET_UNIT_DAILY",
+              "BUDGET_UNIT_WEEKLY"
+            ],
+            "description": "Budget time unit"
+          },
+          "total": {
+            "$ref": "#/components/schemas/UpdateCampaigns_CurrencyAmount",
+            "description": "Total budget amount"
+          }
+        }
+      },
+      "UpdateCampaigns_CurrencyAmount": {
+        "type": "object",
+        "required": [
+          "amount_e5",
+          "currency_code"
+        ],
+        "properties": {
+          "amount_e5": {
+            "type": "string",
+            "format": "currency-amount",
+            "description": "Amount in E5 format (e.g., \"50000\" represents $0.50)"
+          },
+          "currency_code": {
+            "type": "string",
+            "format": "currency-code",
+            "description": "Currency code (ISO 4217)"
+          }
+        }
+      },
+      "UpdateCampaigns_OperationResult": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "success": {
+                "$ref": "#/components/schemas/UpdateCampaigns_OperationSuccess"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "failure": {
+                "$ref": "#/components/schemas/UpdateCampaigns_OperationFailure"
+              }
+            }
+          }
+        ]
+      },
+      "UpdateCampaigns_OperationSuccess": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the updated campaign"
+          }
+        }
+      },
+      "UpdateCampaigns_OperationFailure": {
+        "type": "object",
+        "properties": {
+          "error_code": {
+            "type": "string",
+            "description": "Error code for the failed operation"
+          },
+          "error_message": {
+            "type": "string",
+            "description": "Error message for the failed operation"
+          }
+        }
+      },
+      "UpdateCampaigns_error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "GetAdGroups_AdGroup": {
+        "type": "object",
+        "properties": {
+          "ad_group_id": {
+            "type": "string",
+            "description": "Unique ad group identifier"
+          },
+          "campaign_id": {
+            "type": "string",
+            "description": "Parent campaign ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Ad group name"
+          },
+          "ad_product": {
+            "type": "string",
+            "description": "Ad product type"
+          },
+          "schedule": {
+            "$ref": "#/components/schemas/GetAdGroups_Schedule"
+          },
+          "budget": {
+            "$ref": "#/components/schemas/GetAdGroups_Budget"
+          },
+          "bidding": {
+            "$ref": "#/components/schemas/GetAdGroups_Bidding"
+          },
+          "targeting": {
+            "$ref": "#/components/schemas/GetAdGroups_TargetingCriteria"
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetAdGroups_AdGroupAction"
+            },
+            "description": "Actions configured for this ad group"
+          },
+          "dayparting_schedule": {
+            "$ref": "#/components/schemas/GetAdGroups_DaypartingSchedule"
+          },
+          "subjects": {
+            "$ref": "#/components/schemas/GetAdGroups_AdSubjects"
+          },
+          "configured_status": {
+            "type": "string",
+            "description": "Status configured by the user"
+          },
+          "effective_status": {
+            "type": "string",
+            "description": "Status representing deliverability of the ad group"
+          },
+          "effective_status_reasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Reasons why the ad group is not eligible to be served"
+          },
+          "ads": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetAdGroups_AdSummary"
+            },
+            "description": "Summary of ads in this ad group"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "READ",
+                "UPDATE",
+                "DELETE"
+              ]
+            },
+            "description": "Operations the caller is permitted to perform on this ad group"
+          }
+        }
+      },
+      "GetAdGroups_Schedule": {
+        "type": "object",
+        "description": "Time-based schedule configuration for ad groups",
+        "properties": {
+          "start_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start time (RFC 3339)"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End time (RFC 3339). If not provided, there is no end date."
+          }
+        }
+      },
+      "GetAdGroups_Budget": {
+        "type": "object",
+        "description": "Budget configuration for ad groups",
+        "properties": {
+          "unit": {
+            "type": "string",
+            "enum": [
+              "BUDGET_UNIT_INVALID",
+              "BUDGET_UNIT_FIXED",
+              "BUDGET_UNIT_DAILY",
+              "BUDGET_UNIT_WEEKLY"
+            ],
+            "description": "Budget time unit"
+          },
+          "total": {
+            "$ref": "#/components/schemas/GetAdGroups_CurrencyAmount",
+            "description": "Total budget amount"
+          },
+          "cofunding_sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetAdGroups_CofundingSource"
+            },
+            "description": "Sources of campaign funding"
+          }
+        }
+      },
+      "GetAdGroups_Bidding": {
+        "type": "object",
+        "description": "Bidding strategy configuration for the ad group",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "auto": {
+                "$ref": "#/components/schemas/GetAdGroups_AutoBidding"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "manual": {
+                "$ref": "#/components/schemas/GetAdGroups_ManualBidding"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "goal_based": {
+                "$ref": "#/components/schemas/GetAdGroups_GoalBasedBidding"
+              }
+            }
+          }
+        ]
+      },
+      "GetAdGroups_AutoBidding": {
+        "type": "object",
+        "description": "Automatic bidding strategy"
+      },
+      "GetAdGroups_ManualBidding": {
+        "type": "object",
+        "description": "Manual bidding strategy with fixed bid amount",
+        "properties": {
+          "bid_amount": {
+            "$ref": "#/components/schemas/GetAdGroups_CurrencyAmount"
+          }
+        }
+      },
+      "GetAdGroups_GoalBasedBidding": {
+        "type": "object",
+        "description": "Goal-based bidding strategy targeting specific ROAS",
+        "properties": {
+          "roas_goal": {
+            "type": "number",
+            "format": "double",
+            "description": "Return on ad spend goal"
+          }
+        }
+      },
+      "GetAdGroups_TargetingCriteria": {
+        "type": "object",
+        "description": "Targeting configuration for the ad group",
+        "properties": {
+          "negation": {
+            "type": "boolean",
+            "description": "Whether this is a negative targeting criteria"
+          },
+          "operator": {
+            "type": "string",
+            "enum": [
+              "AND",
+              "OR"
+            ]
+          },
+          "criteria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetAdGroups_TargetingCriterion"
+            }
+          }
+        },
+        "example": {
+          "negation": false,
+          "operator": "AND",
+          "criteria": [
+            {
+              "keyword_targeting": {
+                "keywords": [
+                  "sushi",
+                  "noodles"
+                ],
+                "match_type": "MATCH_TYPE_EXACT"
+              }
+            },
+            {
+              "uber_one": {}
+            },
+            {
+              "new_to_brand": {}
+            }
+          ]
+        }
+      },
+      "GetAdGroups_TargetingCriterion": {
+        "type": "object",
+        "description": "Individual targeting criterion",
+        "oneOf": [
+          {
+            "type": "object",
+            "description": "Nested targeting criteria",
+            "properties": {
+              "criteria": {
+                "$ref": "#/components/schemas/GetAdGroups_TargetingCriteria"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users who have an active Uber One membership subscription",
+            "properties": {
+              "uber_one": {
+                "$ref": "#/components/schemas/GetAdGroups_UberOneTargetingCriterion"
+              }
+            },
+            "example": {
+              "uber_one": {}
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users based on their order frequency within a specified time range (e.g., users who placed 1-3 orders in the past 30 days)",
+            "properties": {
+              "order_frequency": {
+                "$ref": "#/components/schemas/GetAdGroups_OrderFrequencyTargetingCriterion"
+              }
+            },
+            "example": {
+              "order_frequency": {
+                "lower_bound": 1,
+                "upper_bound": 5,
+                "time_range": {
+                  "past_days_range": {
+                    "start_day": 0,
+                    "end_day": 30
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users based on search terms they use (keyword matching for sponsored search campaigns)",
+            "properties": {
+              "keyword_targeting": {
+                "$ref": "#/components/schemas/GetAdGroups_KeywordTargetingCriterion"
+              }
+            },
+            "example": {
+              "keyword_targeting": {
+                "keywords": [
+                  "pizza",
+                  "delivery"
+                ],
+                "match_type": "MATCH_TYPE_EXACT"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users from a custom audience segment",
+            "properties": {
+              "custom_audience": {
+                "$ref": "#/components/schemas/GetAdGroups_CustomAudienceTargetingCriterion"
+              }
+            },
+            "example": {
+              "custom_audience": {}
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users who have not ordered from the merchant's brand within the last 365 days",
+            "properties": {
+              "new_to_brand": {
+                "$ref": "#/components/schemas/GetAdGroups_NewToBrandTargetingCriterion"
+              }
+            },
+            "example": {
+              "new_to_brand": {}
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users who have not ordered from the merchant's location within the last 365 days",
+            "properties": {
+              "new_to_location": {
+                "$ref": "#/components/schemas/GetAdGroups_NewToLocationTargetingCriterion"
+              }
+            },
+            "example": {
+              "new_to_location": {}
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users who have previously ordered from the merchant's location within the last 42 days",
+            "properties": {
+              "existing_to_location": {
+                "$ref": "#/components/schemas/GetAdGroups_ExistingToLocationTargetingCriterion"
+              }
+            },
+            "example": {
+              "existing_to_location": {}
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users who have ordered from the merchant's location in the last 365 days but have not ordered in the last 42 days",
+            "properties": {
+              "lapsed_to_location": {
+                "$ref": "#/components/schemas/GetAdGroups_LapsedToLocationTargetingCriterion"
+              }
+            },
+            "example": {
+              "lapsed_to_location": {}
+            }
+          }
+        ]
+      },
+      "GetAdGroups_UberOneTargetingCriterion": {
+        "type": "object",
+        "description": "Targets users who have an active Uber One membership subscription"
+      },
+      "GetAdGroups_OrderFrequencyTargetingCriterion": {
+        "type": "object",
+        "description": "Targets users based on their order frequency within a specified time range.",
+        "properties": {
+          "lower_bound": {
+            "type": "integer",
+            "description": "Lower bound for the number of orders (non-inclusive)."
+          },
+          "upper_bound": {
+            "type": "integer",
+            "description": "Upper bound for the number of orders (non-inclusive). Set to `-1` to indicate no upper limit (any number of orders)."
+          },
+          "time_range": {
+            "$ref": "#/components/schemas/GetAdGroups_OrderFrequencyTimeRange",
+            "description": "Time range for order frequency calculation"
+          }
+        }
+      },
+      "GetAdGroups_OrderFrequencyTimeRange": {
+        "type": "object",
+        "properties": {
+          "past_days_range": {
+            "$ref": "#/components/schemas/GetAdGroups_PastDaysRange"
+          }
+        }
+      },
+      "GetAdGroups_PastDaysRange": {
+        "type": "object",
+        "properties": {
+          "start_day": {
+            "type": "integer",
+            "description": "Start day for the range (0 = today, closest day to now)"
+          },
+          "end_day": {
+            "type": "integer",
+            "description": "End day for the range (furthest day from now)"
+          }
+        }
+      },
+      "GetAdGroups_KeywordTargetingCriterion": {
+        "type": "object",
+        "description": "Targets users based on search terms they use for keyword matching",
+        "properties": {
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of keywords to target",
+            "example": [
+              "pizza",
+              "delivery",
+              "fast food"
+            ]
+          },
+          "match_type": {
+            "type": "string",
+            "enum": [
+              "MATCH_TYPE_INVALID",
+              "MATCH_TYPE_EXACT",
+              "MATCH_TYPE_BROAD"
+            ],
+            "example": "MATCH_TYPE_EXACT"
+          }
+        }
+      },
+      "GetAdGroups_CustomAudienceTargetingCriterion": {
+        "type": "object",
+        "description": "Targets users from a custom audience segment"
+      },
+      "GetAdGroups_NewToBrandTargetingCriterion": {
+        "type": "object",
+        "description": "Targets users who have not ordered from the merchant's brand within the last 365 days"
+      },
+      "GetAdGroups_NewToLocationTargetingCriterion": {
+        "type": "object",
+        "description": "Targets users who have not ordered from the merchant's location within the last 365 days"
+      },
+      "GetAdGroups_ExistingToLocationTargetingCriterion": {
+        "type": "object",
+        "description": "Targets users who have previously ordered from the merchant's location within the last 42 days"
+      },
+      "GetAdGroups_LapsedToLocationTargetingCriterion": {
+        "type": "object",
+        "description": "Targets users who have ordered from the merchant's location in the last 365 days but have not ordered in the last 42 days"
+      },
+      "GetAdGroups_AdGroupAction": {
+        "type": "object",
+        "description": "Automated actions configured for ad groups",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "auto_resume_action": {
+                "$ref": "#/components/schemas/GetAdGroups_AutoResumeAction"
+              }
+            }
+          }
+        ]
+      },
+      "GetAdGroups_AutoResumeAction": {
+        "type": "object",
+        "description": "Automatic resume action configuration",
+        "properties": {
+          "resume_date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date to resume the ad group (RFC 3339 format, e.g., \"2024-01-15T10:00:00Z\")"
+          }
+        }
+      },
+      "GetAdGroups_DaypartingSchedule": {
+        "type": "object",
+        "description": "Schedule configuration for ad delivery by time of day. Contains exactly 7 day schedules (Monday through Sunday).",
+        "properties": {
+          "dayparting_day_schedule": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetAdGroups_DaypartingDaySchedule"
+            },
+            "description": "Weekly schedule starting from Monday (7 elements)"
+          }
+        }
+      },
+      "GetAdGroups_DaypartingDaySchedule": {
+        "type": "object",
+        "description": "Schedule configuration for a specific day",
+        "properties": {
+          "intervals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetAdGroups_DaypartingInterval"
+            }
+          }
+        }
+      },
+      "GetAdGroups_DaypartingInterval": {
+        "type": "object",
+        "description": "Time interval for ad delivery",
+        "properties": {
+          "start_time": {
+            "$ref": "#/components/schemas/GetAdGroups_DaypartingTime"
+          },
+          "end_time": {
+            "$ref": "#/components/schemas/GetAdGroups_DaypartingTime"
+          }
+        }
+      },
+      "GetAdGroups_DaypartingTime": {
+        "type": "object",
+        "description": "Specific time of day",
+        "properties": {
+          "hour": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 24,
+            "description": "Hour of the day (0-23, or 24 to represent end of day)"
+          },
+          "minute": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 59,
+            "description": "Minute of the hour (0-59)"
+          }
+        }
+      },
+      "GetAdGroups_AdSubjects": {
+        "type": "object",
+        "description": "Subject configuration for the ad group",
+        "properties": {
+          "stores": {
+            "$ref": "#/components/schemas/GetAdGroups_StoreSubjects"
+          }
+        }
+      },
+      "GetAdGroups_StoreSubjects": {
+        "type": "object",
+        "description": "Store-based targeting configuration",
+        "properties": {
+          "store_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of store IDs"
+          }
+        }
+      },
+      "GetAdGroups_AdSummary": {
+        "type": "object",
+        "properties": {
+          "ad_id": {
+            "type": "string",
+            "description": "Unique ad identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Ad name"
+          }
+        }
+      },
+      "GetAdGroups_CurrencyAmount": {
+        "type": "object",
+        "properties": {
+          "amount_e5": {
+            "type": "string",
+            "format": "currency-amount",
+            "description": "Amount in E5"
+          },
+          "currency_code": {
+            "type": "string",
+            "format": "currency-code",
+            "description": "Currency code (ISO 4217)"
+          }
+        }
+      },
+      "GetAdGroups_CofundingSource": {
+        "type": "object",
+        "properties": {
+          "funding_percentage": {
+            "type": "number",
+            "format": "double",
+            "description": "Percentage of cofunding for this campaign (e.g., 70.0 means 70% of the campaign budget is cofunded)"
+          }
+        }
+      },
+      "GetAdGroups_PageToken": {
+        "type": "object",
+        "description": "Pagination token for retrieving additional results",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Opaque page token for pagination"
+          }
+        }
+      },
+      "GetAdGroups_error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "CreateAdGroups_CreateAdGroupInput": {
+        "type": "object",
+        "required": [
+          "name",
+          "ad_product",
+          "configured_status",
+          "schedule",
+          "bidding",
+          "ad_subjects"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Ad group name"
+          },
+          "ad_product": {
+            "type": "string",
+            "enum": [
+              "SPONSORED_LISTING",
+              "SPONSORED_SEARCH"
+            ],
+            "description": "Ad product type"
+          },
+          "configured_status": {
+            "type": "string",
+            "enum": [
+              "AD_GROUP_CONFIGURED_STATUS_ACTIVE",
+              "AD_GROUP_CONFIGURED_STATUS_PAUSED"
+            ],
+            "description": "Status configured by the user"
+          },
+          "budget": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateAdGroups_BudgetInput"
+              }
+            ],
+            "description": "Budget configuration. Can be set at campaign level (shared across ad groups) or ad group level (more granular control)."
+          },
+          "schedule": {
+            "$ref": "#/components/schemas/CreateAdGroups_ScheduleInput",
+            "description": "Schedule configuration for the ad group"
+          },
+          "dayparting_schedule": {
+            "$ref": "#/components/schemas/CreateAdGroups_DaypartingScheduleInput",
+            "description": "Dayparting schedule configuration"
+          },
+          "bidding": {
+            "$ref": "#/components/schemas/CreateAdGroups_BiddingInput",
+            "description": "Bidding configuration"
+          },
+          "targeting": {
+            "$ref": "#/components/schemas/CreateAdGroups_TargetingCriteriaInput",
+            "description": "Targeting criteria configuration. Optional - if not provided or set to null, targets all users without restrictions."
+          },
+          "ad_subjects": {
+            "$ref": "#/components/schemas/CreateAdGroups_AdSubjectsInput",
+            "description": "Ad subjects configuration"
+          }
+        }
+      },
+      "CreateAdGroups_BudgetInput": {
+        "type": "object",
+        "required": [
+          "unit",
+          "total"
+        ],
+        "properties": {
+          "unit": {
+            "type": "string",
+            "enum": [
+              "BUDGET_UNIT_FIXED",
+              "BUDGET_UNIT_DAILY",
+              "BUDGET_UNIT_WEEKLY"
+            ],
+            "description": "Budget time unit"
+          },
+          "total": {
+            "$ref": "#/components/schemas/CreateAdGroups_CurrencyAmountInput",
+            "description": "Total budget amount"
+          }
+        }
+      },
+      "CreateAdGroups_ScheduleInput": {
+        "type": "object",
+        "required": [
+          "start_time"
+        ],
+        "properties": {
+          "start_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start time (RFC 3339)"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End time (RFC 3339). If not provided, there is no end date."
+          }
+        }
+      },
+      "CreateAdGroups_DaypartingScheduleInput": {
+        "type": "object",
+        "required": [
+          "dayparting_day_schedule"
+        ],
+        "description": "Schedule configuration for ad delivery by time of day. Must include exactly 7 day schedules (Monday through Sunday).",
+        "properties": {
+          "dayparting_day_schedule": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateAdGroups_DaypartingDayScheduleInput"
+            },
+            "description": "Weekly schedule starting from Monday (7 elements required)"
+          }
+        }
+      },
+      "CreateAdGroups_DaypartingDayScheduleInput": {
+        "type": "object",
+        "properties": {
+          "intervals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateAdGroups_DaypartingIntervalInput"
+            },
+            "description": "Time intervals for the day"
+          }
+        }
+      },
+      "CreateAdGroups_DaypartingIntervalInput": {
+        "type": "object",
+        "required": [
+          "start_time",
+          "end_time"
+        ],
+        "description": "Time interval for ad delivery",
+        "properties": {
+          "start_time": {
+            "$ref": "#/components/schemas/CreateAdGroups_DaypartingTimeInput",
+            "description": "Start time for the interval"
+          },
+          "end_time": {
+            "$ref": "#/components/schemas/CreateAdGroups_DaypartingTimeInput",
+            "description": "End time for the interval"
+          }
+        }
+      },
+      "CreateAdGroups_DaypartingTimeInput": {
+        "type": "object",
+        "required": [
+          "hour",
+          "minute"
+        ],
+        "description": "Specific time of day",
+        "properties": {
+          "hour": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 24,
+            "description": "Hour of the day (0-23, or 24 to represent end of day)"
+          },
+          "minute": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 59,
+            "description": "Minute of the hour (0-59). Must be divisible by 15."
+          }
+        }
+      },
+      "CreateAdGroups_BiddingInput": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "auto": {
+                "$ref": "#/components/schemas/CreateAdGroups_AutoBiddingInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "manual": {
+                "$ref": "#/components/schemas/CreateAdGroups_ManualBiddingInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "goal_based": {
+                "$ref": "#/components/schemas/CreateAdGroups_GoalBasedBiddingInput"
+              }
+            }
+          }
+        ]
+      },
+      "CreateAdGroups_AutoBiddingInput": {
+        "type": "object",
+        "description": "Automatic bidding configuration"
+      },
+      "CreateAdGroups_ManualBiddingInput": {
+        "type": "object",
+        "required": [
+          "bid_amount"
+        ],
+        "properties": {
+          "bid_amount": {
+            "$ref": "#/components/schemas/CreateAdGroups_CurrencyAmountInput",
+            "description": "Manual bid amount"
+          }
+        }
+      },
+      "CreateAdGroups_GoalBasedBiddingInput": {
+        "type": "object",
+        "required": [
+          "roas_goal"
+        ],
+        "properties": {
+          "roas_goal": {
+            "type": "number",
+            "format": "double",
+            "description": "Return on ad spend goal"
+          }
+        }
+      },
+      "CreateAdGroups_TargetingCriteriaInput": {
+        "type": "object",
+        "required": [
+          "negation",
+          "operator",
+          "criteria"
+        ],
+        "properties": {
+          "negation": {
+            "type": "boolean",
+            "description": "Whether to negate the targeting criteria"
+          },
+          "operator": {
+            "type": "string",
+            "enum": [
+              "AND",
+              "OR"
+            ],
+            "description": "Logical operator for combining criteria"
+          },
+          "criteria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateAdGroups_TargetingCriterionInput"
+            },
+            "description": "List of targeting criteria"
+          }
+        }
+      },
+      "CreateAdGroups_TargetingCriterionInput": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "description": "Nested targeting criteria",
+            "properties": {
+              "criteria": {
+                "$ref": "#/components/schemas/CreateAdGroups_TargetingCriteriaInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users who have an active Uber One membership subscription",
+            "properties": {
+              "uber_one": {
+                "$ref": "#/components/schemas/CreateAdGroups_UberOneTargetingCriterionInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users based on their order frequency within a specified time range (e.g., users who placed 1-3 orders in the past 30 days)",
+            "properties": {
+              "order_frequency": {
+                "$ref": "#/components/schemas/CreateAdGroups_OrderFrequencyTargetingCriterionInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users based on search terms they use (keyword matching for sponsored search campaigns)",
+            "properties": {
+              "keyword_targeting": {
+                "$ref": "#/components/schemas/CreateAdGroups_KeywordTargetingCriterionInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users who have not ordered from the merchant's brand within the last 365 days",
+            "properties": {
+              "new_to_brand": {
+                "$ref": "#/components/schemas/CreateAdGroups_NewToBrandTargetingCriterionInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users who have not ordered from the merchant's location within the last 365 days",
+            "properties": {
+              "new_to_location": {
+                "$ref": "#/components/schemas/CreateAdGroups_NewToLocationTargetingCriterionInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users who have previously ordered from the merchant's location within the last 42 days",
+            "properties": {
+              "existing_to_location": {
+                "$ref": "#/components/schemas/CreateAdGroups_ExistingToLocationTargetingCriterionInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users who have ordered from the merchant's location in the last 365 days but have not ordered in the last 42 days",
+            "properties": {
+              "lapsed_to_location": {
+                "$ref": "#/components/schemas/CreateAdGroups_LapsedToLocationTargetingCriterionInput"
+              }
+            }
+          }
+        ]
+      },
+      "CreateAdGroups_UberOneTargetingCriterionInput": {
+        "type": "object",
+        "description": "Targets users who have an active Uber One membership subscription"
+      },
+      "CreateAdGroups_NewToBrandTargetingCriterionInput": {
+        "type": "object",
+        "description": "Targets users who have not ordered from the merchant's brand within the last 365 days"
+      },
+      "CreateAdGroups_NewToLocationTargetingCriterionInput": {
+        "type": "object",
+        "description": "Targets users who have not ordered from the merchant's location within the last 365 days"
+      },
+      "CreateAdGroups_ExistingToLocationTargetingCriterionInput": {
+        "type": "object",
+        "description": "Targets users who have previously ordered from the merchant's location within the last 42 days"
+      },
+      "CreateAdGroups_LapsedToLocationTargetingCriterionInput": {
+        "type": "object",
+        "description": "Targets users who have ordered from the merchant's location in the last 365 days but have not ordered in the last 42 days"
+      },
+      "CreateAdGroups_OrderFrequencyTargetingCriterionInput": {
+        "type": "object",
+        "description": "Targets users based on their order frequency within a specified time range.",
+        "required": [
+          "lower_bound",
+          "upper_bound",
+          "time_range"
+        ],
+        "properties": {
+          "lower_bound": {
+            "type": "integer",
+            "description": "Lower bound for order frequency (non-inclusive)."
+          },
+          "upper_bound": {
+            "type": "integer",
+            "description": "Upper bound for order frequency (non-inclusive). Set to `-1` to indicate no upper limit (any number of orders)."
+          },
+          "time_range": {
+            "$ref": "#/components/schemas/CreateAdGroups_OrderFrequencyTimeRangeInput",
+            "description": "Time range for order frequency"
+          }
+        }
+      },
+      "CreateAdGroups_OrderFrequencyTimeRangeInput": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "past_days_range": {
+                "$ref": "#/components/schemas/CreateAdGroups_PastDaysRangeInput"
+              }
+            }
+          }
+        ]
+      },
+      "CreateAdGroups_PastDaysRangeInput": {
+        "type": "object",
+        "required": [
+          "start_day",
+          "end_day"
+        ],
+        "properties": {
+          "start_day": {
+            "type": "integer",
+            "description": "Start day for the range (0 = today, closest day to now)"
+          },
+          "end_day": {
+            "type": "integer",
+            "description": "End day for the range (furthest day from now)"
+          }
+        }
+      },
+      "CreateAdGroups_KeywordTargetingCriterionInput": {
+        "type": "object",
+        "description": "Targets users based on search terms they use for keyword matching",
+        "required": [
+          "keywords",
+          "match_type"
+        ],
+        "properties": {
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of keywords to target"
+          },
+          "match_type": {
+            "type": "string",
+            "enum": [
+              "EXACT",
+              "BROAD"
+            ],
+            "description": "Keyword match type"
+          }
+        }
+      },
+      "CreateAdGroups_AdSubjectsInput": {
+        "type": "object",
+        "properties": {
+          "stores": {
+            "$ref": "#/components/schemas/CreateAdGroups_StoreSubjectsInput"
+          }
+        }
+      },
+      "CreateAdGroups_StoreSubjectsInput": {
+        "type": "object",
+        "required": [
+          "store_ids"
+        ],
+        "properties": {
+          "store_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of store IDs"
+          }
+        }
+      },
+      "CreateAdGroups_CurrencyAmountInput": {
+        "type": "object",
+        "required": [
+          "amount_e5",
+          "currency_code"
+        ],
+        "properties": {
+          "amount_e5": {
+            "type": "string",
+            "format": "currency-amount",
+            "description": "Amount in E5 format (e.g., \"50000\" represents $0.50)"
+          },
+          "currency_code": {
+            "type": "string",
+            "format": "currency-code",
+            "description": "Currency code (ISO 4217)"
+          }
+        }
+      },
+      "CreateAdGroups_OperationResult": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "success": {
+                "$ref": "#/components/schemas/CreateAdGroups_OperationSuccess"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "failure": {
+                "$ref": "#/components/schemas/CreateAdGroups_OperationFailure"
+              }
+            }
+          }
+        ]
+      },
+      "CreateAdGroups_OperationSuccess": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the created ad group"
+          }
+        }
+      },
+      "CreateAdGroups_OperationFailure": {
+        "type": "object",
+        "properties": {
+          "error_code": {
+            "type": "string",
+            "description": "Error code for the failed operation"
+          },
+          "error_message": {
+            "type": "string",
+            "description": "Error message for the failed operation"
+          }
+        }
+      },
+      "CreateAdGroups_error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "UpdateAdGroups_UpdateAdGroupInput": {
+        "type": "object",
+        "description": "Input for updating an ad group.",
+        "required": [
+          "ad_group_id"
+        ],
+        "properties": {
+          "ad_group_id": {
+            "type": "string",
+            "description": "Unique ad group identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Ad group name"
+          },
+          "configured_status": {
+            "type": "string",
+            "enum": [
+              "AD_GROUP_CONFIGURED_STATUS_ACTIVE",
+              "AD_GROUP_CONFIGURED_STATUS_PAUSED"
+            ],
+            "description": "Status configured by the user"
+          },
+          "budget": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdateAdGroups_BudgetInput"
+              }
+            ],
+            "description": "Budget configuration for the ad group. Providing an empty budget removes the budget from the ad group."
+          },
+          "bidding": {
+            "$ref": "#/components/schemas/UpdateAdGroups_BiddingInput",
+            "description": "Bidding configuration"
+          },
+          "targeting": {
+            "$ref": "#/components/schemas/UpdateAdGroups_TargetingCriteriaInput",
+            "description": "Targeting criteria configuration. Optional - if not provided or set to null, targets all users without restrictions. Providing an empty targeting object clears the targeting from the ad group."
+          },
+          "ad_subjects": {
+            "$ref": "#/components/schemas/UpdateAdGroups_AdSubjectsInput",
+            "description": "Ad subjects configuration"
+          },
+          "schedule": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdateAdGroups_ScheduleInput"
+              }
+            ],
+            "description": "Schedule configuration for the ad group"
+          },
+          "dayparting_schedule": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdateAdGroups_DaypartingScheduleInput"
+              }
+            ],
+            "description": "Dayparting schedule configuration. Providing an empty dayparting schedule disables the dayparting schedule for the ad group."
+          }
+        }
+      },
+      "UpdateAdGroups_BudgetInput": {
+        "type": "object",
+        "required": [
+          "unit",
+          "total"
+        ],
+        "properties": {
+          "unit": {
+            "type": "string",
+            "enum": [
+              "BUDGET_UNIT_FIXED",
+              "BUDGET_UNIT_DAILY",
+              "BUDGET_UNIT_WEEKLY"
+            ],
+            "description": "Budget time unit"
+          },
+          "total": {
+            "$ref": "#/components/schemas/UpdateAdGroups_CurrencyAmount",
+            "description": "Total budget amount"
+          }
+        }
+      },
+      "UpdateAdGroups_ScheduleInput": {
+        "type": "object",
+        "required": [
+          "start_time"
+        ],
+        "properties": {
+          "start_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start time (RFC 3339)"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End time (RFC 3339). If not provided, there is no end date."
+          }
+        }
+      },
+      "UpdateAdGroups_DaypartingScheduleInput": {
+        "type": "object",
+        "required": [
+          "dayparting_day_schedule"
+        ],
+        "description": "Schedule configuration for ad delivery by time of day. Must include exactly 7 day schedules (Monday through Sunday).",
+        "properties": {
+          "dayparting_day_schedule": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateAdGroups_DaypartingDayScheduleInput"
+            },
+            "description": "Weekly schedule starting from Monday (7 elements required)"
+          }
+        }
+      },
+      "UpdateAdGroups_DaypartingDayScheduleInput": {
+        "type": "object",
+        "properties": {
+          "intervals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateAdGroups_DaypartingIntervalInput"
+            },
+            "description": "Time intervals for the day"
+          }
+        }
+      },
+      "UpdateAdGroups_DaypartingIntervalInput": {
+        "type": "object",
+        "required": [
+          "start_time",
+          "end_time"
+        ],
+        "description": "Time interval for ad delivery",
+        "properties": {
+          "start_time": {
+            "$ref": "#/components/schemas/UpdateAdGroups_DaypartingTimeInput",
+            "description": "Start time for the interval"
+          },
+          "end_time": {
+            "$ref": "#/components/schemas/UpdateAdGroups_DaypartingTimeInput",
+            "description": "End time for the interval"
+          }
+        }
+      },
+      "UpdateAdGroups_DaypartingTimeInput": {
+        "type": "object",
+        "required": [
+          "hour",
+          "minute"
+        ],
+        "description": "Specific time of day",
+        "properties": {
+          "hour": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 24,
+            "description": "Hour of the day (0-23, or 24 to represent end of day)"
+          },
+          "minute": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 59,
+            "description": "Minute of the hour (0-59). Must be divisible by 15."
+          }
+        }
+      },
+      "UpdateAdGroups_BiddingInput": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "auto": {
+                "$ref": "#/components/schemas/UpdateAdGroups_AutoBiddingInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "manual": {
+                "$ref": "#/components/schemas/UpdateAdGroups_ManualBiddingInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "goal_based": {
+                "$ref": "#/components/schemas/UpdateAdGroups_GoalBasedBiddingInput"
+              }
+            }
+          }
+        ]
+      },
+      "UpdateAdGroups_AutoBiddingInput": {
+        "type": "object",
+        "description": "Automatic bidding configuration"
+      },
+      "UpdateAdGroups_ManualBiddingInput": {
+        "type": "object",
+        "required": [
+          "bid_amount"
+        ],
+        "properties": {
+          "bid_amount": {
+            "$ref": "#/components/schemas/UpdateAdGroups_CurrencyAmount",
+            "description": "Manual bid amount"
+          }
+        }
+      },
+      "UpdateAdGroups_GoalBasedBiddingInput": {
+        "type": "object",
+        "required": [
+          "roas_goal"
+        ],
+        "properties": {
+          "roas_goal": {
+            "type": "number",
+            "format": "double",
+            "description": "Return on ad spend goal"
+          }
+        }
+      },
+      "UpdateAdGroups_TargetingCriteriaInput": {
+        "type": "object",
+        "required": [
+          "negation",
+          "operator",
+          "criteria"
+        ],
+        "properties": {
+          "negation": {
+            "type": "boolean",
+            "description": "Whether to negate the targeting criteria"
+          },
+          "operator": {
+            "type": "string",
+            "enum": [
+              "AND",
+              "OR"
+            ],
+            "description": "Logical operator for combining criteria"
+          },
+          "criteria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateAdGroups_TargetingCriterionInput"
+            },
+            "description": "List of targeting criteria"
+          }
+        }
+      },
+      "UpdateAdGroups_TargetingCriterionInput": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "description": "Nested targeting criteria",
+            "properties": {
+              "criteria": {
+                "$ref": "#/components/schemas/UpdateAdGroups_TargetingCriteriaInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users who have an active Uber One membership subscription",
+            "properties": {
+              "uber_one": {
+                "$ref": "#/components/schemas/UpdateAdGroups_UberOneTargetingCriterionInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users based on their order frequency within a specified time range (e.g., users who placed 1-3 orders in the past 30 days)",
+            "properties": {
+              "order_frequency": {
+                "$ref": "#/components/schemas/UpdateAdGroups_OrderFrequencyTargetingCriterionInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users based on search terms they use (keyword matching for sponsored search campaigns)",
+            "properties": {
+              "keyword_targeting": {
+                "$ref": "#/components/schemas/UpdateAdGroups_KeywordTargetingCriterionInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users who have not ordered from the merchant's brand within the last 365 days",
+            "properties": {
+              "new_to_brand": {
+                "$ref": "#/components/schemas/UpdateAdGroups_NewToBrandTargetingCriterionInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users who have not ordered from the merchant's location within the last 365 days",
+            "properties": {
+              "new_to_location": {
+                "$ref": "#/components/schemas/UpdateAdGroups_NewToLocationTargetingCriterionInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users who have previously ordered from the merchant's location within the last 42 days",
+            "properties": {
+              "existing_to_location": {
+                "$ref": "#/components/schemas/UpdateAdGroups_ExistingToLocationTargetingCriterionInput"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Target users who have ordered from the merchant's location in the last 365 days but have not ordered in the last 42 days",
+            "properties": {
+              "lapsed_to_location": {
+                "$ref": "#/components/schemas/UpdateAdGroups_LapsedToLocationTargetingCriterionInput"
+              }
+            }
+          }
+        ]
+      },
+      "UpdateAdGroups_UberOneTargetingCriterionInput": {
+        "type": "object",
+        "description": "Targets users who have an active Uber One membership subscription"
+      },
+      "UpdateAdGroups_NewToBrandTargetingCriterionInput": {
+        "type": "object",
+        "description": "Targets users who have not ordered from the merchant's brand within the last 365 days"
+      },
+      "UpdateAdGroups_NewToLocationTargetingCriterionInput": {
+        "type": "object",
+        "description": "Targets users who have not ordered from the merchant's location within the last 365 days"
+      },
+      "UpdateAdGroups_ExistingToLocationTargetingCriterionInput": {
+        "type": "object",
+        "description": "Targets users who have previously ordered from the merchant's location within the last 42 days"
+      },
+      "UpdateAdGroups_LapsedToLocationTargetingCriterionInput": {
+        "type": "object",
+        "description": "Targets users who have ordered from the merchant's location in the last 365 days but have not ordered in the last 42 days"
+      },
+      "UpdateAdGroups_OrderFrequencyTargetingCriterionInput": {
+        "type": "object",
+        "description": "Targets users based on their order frequency within a specified time range.",
+        "required": [
+          "lower_bound",
+          "upper_bound",
+          "time_range"
+        ],
+        "properties": {
+          "lower_bound": {
+            "type": "integer",
+            "description": "Lower bound for order frequency (non-inclusive)."
+          },
+          "upper_bound": {
+            "type": "integer",
+            "description": "Upper bound for order frequency (non-inclusive). Set to `-1` to indicate no upper limit (any number of orders)."
+          },
+          "time_range": {
+            "$ref": "#/components/schemas/UpdateAdGroups_OrderFrequencyTimeRangeInput",
+            "description": "Time range for order frequency"
+          }
+        }
+      },
+      "UpdateAdGroups_OrderFrequencyTimeRangeInput": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "past_days_range": {
+                "$ref": "#/components/schemas/UpdateAdGroups_PastDaysRangeInput"
+              }
+            }
+          }
+        ]
+      },
+      "UpdateAdGroups_PastDaysRangeInput": {
+        "type": "object",
+        "required": [
+          "start_day",
+          "end_day"
+        ],
+        "properties": {
+          "start_day": {
+            "type": "integer",
+            "description": "Start day for the range (0 = today, closest day to now)"
+          },
+          "end_day": {
+            "type": "integer",
+            "description": "End day for the range (furthest day from now)"
+          }
+        }
+      },
+      "UpdateAdGroups_KeywordTargetingCriterionInput": {
+        "type": "object",
+        "description": "Targets users based on search terms they use for keyword matching",
+        "required": [
+          "keywords",
+          "match_type"
+        ],
+        "properties": {
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of keywords to target"
+          },
+          "match_type": {
+            "type": "string",
+            "enum": [
+              "EXACT",
+              "BROAD"
+            ],
+            "description": "Keyword match type"
+          }
+        }
+      },
+      "UpdateAdGroups_AdSubjectsInput": {
+        "type": "object",
+        "properties": {
+          "stores": {
+            "$ref": "#/components/schemas/UpdateAdGroups_StoreSubjectsInput"
+          }
+        }
+      },
+      "UpdateAdGroups_StoreSubjectsInput": {
+        "type": "object",
+        "required": [
+          "store_ids"
+        ],
+        "properties": {
+          "store_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of store IDs"
+          }
+        }
+      },
+      "UpdateAdGroups_CurrencyAmount": {
+        "type": "object",
+        "required": [
+          "amount_e5",
+          "currency_code"
+        ],
+        "properties": {
+          "amount_e5": {
+            "type": "string",
+            "format": "currency-amount",
+            "description": "Amount in E5 format (e.g., \"50000\" represents $0.50)"
+          },
+          "currency_code": {
+            "type": "string",
+            "format": "currency-code",
+            "description": "Currency code (ISO 4217)"
+          }
+        }
+      },
+      "UpdateAdGroups_OperationResult": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "success": {
+                "$ref": "#/components/schemas/UpdateAdGroups_OperationSuccess"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "failure": {
+                "$ref": "#/components/schemas/UpdateAdGroups_OperationFailure"
+              }
+            }
+          }
+        ]
+      },
+      "UpdateAdGroups_OperationSuccess": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the updated ad group"
+          }
+        }
+      },
+      "UpdateAdGroups_OperationFailure": {
+        "type": "object",
+        "properties": {
+          "error_code": {
+            "type": "string",
+            "description": "Error code for the failed operation"
+          },
+          "error_message": {
+            "type": "string",
+            "description": "Error message for the failed operation"
+          }
+        }
+      },
+      "UpdateAdGroups_error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "GetAds_Ad": {
+        "type": "object",
+        "properties": {
+          "ad_id": {
+            "type": "string",
+            "description": "Unique ad identifier"
+          },
+          "ad_group_id": {
+            "type": "string",
+            "description": "Ad group identifier"
+          },
+          "campaign_id": {
+            "type": "string",
+            "description": "Campaign identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Ad name"
+          }
+        }
+      },
+      "GetAds_PageToken": {
+        "type": "object",
+        "description": "Pagination token for retrieving additional results",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Opaque page token for pagination"
+          }
+        }
+      },
+      "GetAds_error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "CreateAds_CreateAdInput": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Ad name"
+          }
+        }
+      },
+      "CreateAds_OperationResult": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "success": {
+                "$ref": "#/components/schemas/CreateAds_OperationSuccess"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "failure": {
+                "$ref": "#/components/schemas/CreateAds_OperationFailure"
+              }
+            }
+          }
+        ]
+      },
+      "CreateAds_OperationSuccess": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the created ad"
+          }
+        }
+      },
+      "CreateAds_OperationFailure": {
+        "type": "object",
+        "properties": {
+          "error_code": {
+            "type": "string",
+            "description": "Error code for the failed operation"
+          },
+          "error_message": {
+            "type": "string",
+            "description": "Error message for the failed operation"
+          }
+        }
+      },
+      "CreateAds_error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "UpdateAds_UpdateAdInput": {
+        "type": "object",
+        "required": [
+          "ad_id"
+        ],
+        "properties": {
+          "ad_id": {
+            "type": "string",
+            "description": "Unique ad identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Ad name"
+          }
+        }
+      },
+      "UpdateAds_OperationResult": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "success": {
+                "$ref": "#/components/schemas/UpdateAds_OperationSuccess"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "failure": {
+                "$ref": "#/components/schemas/UpdateAds_OperationFailure"
+              }
+            }
+          }
+        ]
+      },
+      "UpdateAds_OperationSuccess": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the updated ad"
+          }
+        }
+      },
+      "UpdateAds_OperationFailure": {
+        "type": "object",
+        "properties": {
+          "error_code": {
+            "type": "string",
+            "description": "Error code for the failed operation"
+          },
+          "error_message": {
+            "type": "string",
+            "description": "Error message for the failed operation"
+          }
+        }
+      },
+      "UpdateAds_error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "GetProducts_Product": {
+        "type": "object",
+        "description": "Product information for advertising inventory",
+        "properties": {
+          "gtin": {
+            "type": "string",
+            "description": "Global Trade Item Number"
+          },
+          "product_name": {
+            "type": "string",
+            "description": "Official or commonly recognized name of the product as sold to consumers"
+          },
+          "brand_owner_name": {
+            "type": "string",
+            "description": "Company or legal entity that owns the rights to the brand and product"
+          },
+          "brand_name": {
+            "type": "string",
+            "description": "Marketed or consumer-facing brand under which the product is sold"
+          },
+          "main_image_url": {
+            "type": "string",
+            "description": "Primary image that visually represents the product on Uber Eats"
+          },
+          "size": {
+            "type": "string",
+            "description": "Measurable quantity expressed in standardized units (e.g., \"500 mL,\" \"12 oz,\" \"10 count\")"
+          }
+        }
+      },
+      "GetProducts_PageToken": {
+        "type": "object",
+        "description": "Pagination token for retrieving additional results",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Opaque page token for pagination"
+          }
+        }
+      },
+      "GetProducts_error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "CreateReports_ExternalSubmitReportJobRequest": {
+        "type": "object",
+        "description": "Request configuration for generating an asynchronous report",
+        "required": [
+          "report_type",
+          "time_range",
+          "columns",
+          "time_unit",
+          "file_format"
+        ],
+        "properties": {
+          "report_type": {
+            "type": "string",
+            "description": "Type of report"
+          },
+          "time_range": {
+            "$ref": "#/components/schemas/CreateReports_TimeRange"
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of dimensions and metrics to include in the report"
+          },
+          "time_unit": {
+            "type": "string",
+            "enum": [
+              "DAILY",
+              "WEEKLY",
+              "MONTHLY",
+              "SUMMARY"
+            ],
+            "description": "Time unit for aggregation:\n- DAILY: Day-by-day breakdown\n- WEEKLY: Week-by-week aggregation (start date must be Monday)\n- MONTHLY: Month-by-month aggregation (start date must be first of month)\n- SUMMARY: Total aggregation across date range\n\nTime Range Configuration:\n- Weekly Reports: start_time must be Monday, end_time must be next Monday\n- Monthly Reports: start_time must be first of month, end_time must be first of next month\n- Daily/Summary Reports: any valid date range\n\nExamples:\n- Weekly: \"2024-01-01T00:00:00Z\" to \"2024-01-08T00:00:00Z\"\n- Monthly: \"2024-01-01T00:00:00Z\" to \"2024-02-01T00:00:00Z\"\n- Daily: \"2024-01-15T00:00:00Z\" to \"2024-01-20T00:00:00Z\"\n"
+          },
+          "file_format": {
+            "type": "string",
+            "description": "Output file format (CSV)"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateReports_Filter"
+            },
+            "description": "Filters to apply to the report"
+          }
+        }
+      },
+      "CreateReports_ExternalSubmitReportJobResponse": {
+        "type": "object",
+        "description": "Response containing the report identifier for tracking",
+        "properties": {
+          "report_id": {
+            "type": "string",
+            "description": "Unique report identifier"
+          }
+        }
+      },
+      "CreateReports_TimeRange": {
+        "type": "object",
+        "description": "Time range specification for report data",
+        "required": [
+          "start_time",
+          "end_time"
+        ],
+        "properties": {
+          "start_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start time (RFC 3339)"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End time (RFC 3339)"
+          }
+        }
+      },
+      "CreateReports_Filter": {
+        "type": "object",
+        "description": "Filter configuration for report data",
+        "required": [
+          "column",
+          "operator",
+          "values"
+        ],
+        "properties": {
+          "column": {
+            "type": "string",
+            "description": "Column to filter on"
+          },
+          "operator": {
+            "type": "string",
+            "description": "Filter operator"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Filter values"
+          }
+        }
+      },
+      "CreateReports_error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "GetReport_ExternalGetReportJobStatusResponse": {
+        "type": "object",
+        "description": "Response containing report generation status and results",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "COMPLETED",
+              "FAILED",
+              "PROCESSING"
+            ],
+            "description": "Report status"
+          },
+          "result": {
+            "$ref": "#/components/schemas/GetReport_ReportResult"
+          }
+        }
+      },
+      "GetReport_ReportResult": {
+        "description": "Report generation result with timing information and outcome",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "started_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "When the report started processing (RFC 3339)"
+              },
+              "finished_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "When the report finished processing (RFC 3339)"
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "success_result": {
+                    "$ref": "#/components/schemas/GetReport_ReportSuccessResult"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "failure_result": {
+                    "$ref": "#/components/schemas/GetReport_ReportFailureResult"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "GetReport_ReportSuccessResult": {
+        "type": "object",
+        "description": "Successful report generation result with download information",
+        "properties": {
+          "report_url": {
+            "type": "string",
+            "description": "URL to download the report"
+          },
+          "file_size": {
+            "type": "string",
+            "format": "int64",
+            "description": "Size of the report file in bytes"
+          },
+          "url_expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the download URL expires (RFC 3339)"
+          },
+          "report_schema": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Schema of the report columns"
+          }
+        }
+      },
+      "GetReport_ReportFailureResult": {
+        "type": "object",
+        "description": "Failed report generation result with error information",
+        "properties": {
+          "failure_reason": {
+            "type": "string",
+            "description": "Reason why the report failed"
+          }
+        }
+      },
+      "GetReport_error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "SyncReport_SyncReportRequest": {
+        "type": "object",
+        "description": "Request configuration for generating a synchronous report",
+        "required": [
+          "report_type",
+          "time_range",
+          "columns",
+          "time_unit"
+        ],
+        "properties": {
+          "report_type": {
+            "type": "string",
+            "description": "Type of report (must support sync reporting)"
+          },
+          "time_range": {
+            "$ref": "#/components/schemas/SyncReport_TimeRange"
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of dimensions and metrics to include in the report"
+          },
+          "time_unit": {
+            "type": "string",
+            "enum": [
+              "HOURLY",
+              "DAILY"
+            ],
+            "description": "Time unit for aggregation:\n- HOURLY: Hour-by-hour breakdown\n- DAILY: Day-by-day breakdown\n"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncReport_Filter"
+            },
+            "description": "Filters to apply to the report"
+          }
+        }
+      },
+      "SyncReport_SyncReportResponse": {
+        "type": "object",
+        "description": "Response containing report data with schema and rows",
+        "properties": {
+          "schema": {
+            "$ref": "#/components/schemas/SyncReport_ReportSchema"
+          },
+          "data": {
+            "$ref": "#/components/schemas/SyncReport_ReportData"
+          }
+        }
+      },
+      "SyncReport_ReportSchema": {
+        "type": "object",
+        "description": "Schema describing the structure of report data",
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncReport_ColumnDefinition"
+            }
+          }
+        }
+      },
+      "SyncReport_ColumnDefinition": {
+        "type": "object",
+        "description": "Definition of a report column",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Column name"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "COLUMN_TYPE_STRING",
+              "COLUMN_TYPE_INT64",
+              "COLUMN_TYPE_DOUBLE",
+              "COLUMN_TYPE_TIMESTAMP",
+              "COLUMN_TYPE_BOOLEAN"
+            ],
+            "description": "Column data type"
+          }
+        }
+      },
+      "SyncReport_ReportData": {
+        "type": "object",
+        "description": "Report data containing rows of values",
+        "properties": {
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncReport_ReportRow"
+            }
+          }
+        }
+      },
+      "SyncReport_ReportRow": {
+        "type": "object",
+        "description": "A single row of report data",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Row values as strings, ordered according to schema columns"
+          }
+        }
+      },
+      "SyncReport_TimeRange": {
+        "type": "object",
+        "description": "Time range specification for report data",
+        "required": [
+          "start_time",
+          "end_time"
+        ],
+        "properties": {
+          "start_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start time (RFC 3339)"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End time (RFC 3339)"
+          }
+        }
+      },
+      "SyncReport_Filter": {
+        "type": "object",
+        "description": "Filter configuration for report data",
+        "required": [
+          "column",
+          "operator",
+          "values"
+        ],
+        "properties": {
+          "column": {
+            "type": "string",
+            "description": "Column to filter on"
+          },
+          "operator": {
+            "type": "string",
+            "enum": [
+              "EQUAL",
+              "NOT_EQUAL",
+              "IN"
+            ],
+            "description": "Filter operator"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Filter values"
+          }
+        }
+      },
+      "SyncReport_error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      }
+    }
+  }
+}
