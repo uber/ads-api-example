@@ -1,0 +1,7 @@
+# Code owners are requested for review automatically on every pull request.
+# When the branch ruleset requires code owner review, their approval is also
+# required before a pull request can merge.
+#
+# @see https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+* @ekim197
