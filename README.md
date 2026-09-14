@@ -3,7 +3,7 @@
 A small, complete Next.js application you can clone and point at your own Uber
 ad account to explore the [Uber Ads API](https://developer.uber.com/docs/ads/introduction).
 
-It implements the full OAuth 2.0 authorization code flow, wraps all 15
+It implements the full OAuth 2.0 authorization code flow, wraps all 
 documented endpoints in a typed client, and ships a dashboard for browsing
 campaigns, ad groups, ads, stores, products, and performance reports. Types are
 generated from Uber's official OpenAPI specification.
