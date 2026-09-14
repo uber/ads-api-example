@@ -6,8 +6,7 @@ ad account to explore the [Uber Ads API](https://developer.uber.com/docs/ads/int
 It implements the full OAuth 2.0 authorization code flow, wraps all 15
 documented endpoints in a typed client, and ships a dashboard for browsing
 campaigns, ad groups, ads, stores, products, and performance reports. Types are
-generated from Uber's official OpenAPI specification, so the request and
-response shapes here are not hand-transcribed guesses.
+generated from Uber's official OpenAPI specification.
 
 > This is example code intended for learning and local experimentation. It is
 > not an officially supported Uber product.
